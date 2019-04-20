@@ -6,7 +6,7 @@
 [酷安](https://www.coolapk.com/apk/cn.nicolite.huthelper) [小米应用商店](http://app.mi.com/details?id=cn.nicolite.huthelper&ref=search)
 
 #### 图片展示
-<image src=http://img1.imgtn.bdimg.com/it/u=2280524610,711954145&fm=26&gp=0.jpg width=250 height=450>
+<image src="http://img1.imgtn.bdimg.com/it/u=2280524610,711954145&fm=26&gp=0.jpg" width=250 height=450>
 
 #### 运行配置要求
 Android 4.4 (API 19)以上， 2G RAM以上，分辨率1920x1080以上
