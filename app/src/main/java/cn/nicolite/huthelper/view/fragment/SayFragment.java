@@ -504,6 +504,7 @@ SayFragment extends BaseFragment implements ISayView {
                         commentNameList.toArray(items);
                         showConmentNameList(items);
                         commentNameList.clear();
+                        commentNameList = null;
                     }
                 }catch (Exception e){
                     e.printStackTrace();

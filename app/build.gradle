@@ -4,10 +4,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'kotlin-kapt'
 
 static def gitVersionCode() {
     def cmd = 'git rev-list HEAD --count'
-    def gitVersionCode = 22688 + cmd.execute().text.trim().toInteger()
+    def gitVersionCode = 22827 + cmd.execute().text.trim().toInteger()
     return gitVersionCode
 }
 
@@ -31,7 +32,7 @@ android {
         applicationId "cn.nicolite.huthelper"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 22827//每次发布加5
+        versionCode  gitVersionCode()
         versionName '1.4.94'//每次发布加1
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -228,7 +229,7 @@ dependencies {
     implementation 'com.github.yalantis:ucrop:2.2.2'
 
     //ButterKnife
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    kapt 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.jakewharton:butterknife:8.8.1'
 
     //Gson---json解析

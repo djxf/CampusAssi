@@ -4,3 +4,7 @@
 /kuan
 /bugly
 /beta
+/api
+Constants.java
+*.apk
+*.log
