@@ -135,6 +135,8 @@ SayFragment extends BaseFragment implements ISayView {
         lRecyclerViewAdapter = new LRecyclerViewAdapter(sayAdapter);
         lRecyclerView.setAdapter(lRecyclerViewAdapter);
         sayPresenter = new SayPresenter(this, this);
+
+        //内部接口
         sayAdapter.setOnItemClickListener(new SayAdapter.OnItemClickListener() {
 
             @Override
@@ -165,7 +167,7 @@ SayFragment extends BaseFragment implements ISayView {
                             @Override
                             public void onClick(View view) {
                                 commonDialog.dismiss();
-                                sayPresenter.deleteSay(position, sayId);
+                                sayPresenter.deleteSay(position, sayId);//防止越界
                             }
                         })
                         .setNegativeButton("取消", null)
@@ -323,8 +325,9 @@ SayFragment extends BaseFragment implements ISayView {
 
     @Override
     public void deleteSaySuccess(int position, String sayId) {
-        sayList.remove(position);
+        Say say = sayList.remove(position-1);
         lRecyclerViewAdapter.notifyItemRemoved(position);
+
     }
 
     @Override

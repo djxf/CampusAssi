@@ -28,6 +28,7 @@ import cn.nicolite.huthelper.model.bean.Say;
 import cn.nicolite.huthelper.model.bean.SayLikedCache;
 import cn.nicolite.huthelper.utils.AnimationTools;
 import cn.nicolite.huthelper.utils.ListUtils;
+import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.view.customView.NinePictureLayout;
 import cn.nicolite.huthelper.view.customView.NoScrollLinearLayoutManager;
 import cn.nicolite.huthelper.view.customView.PictureLayout;
@@ -59,7 +60,7 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final SayViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final SayViewHolder holder,final int position) {
         final Say say = sayList.get(position);
         List<Say.CommentsBean> comments = say.getComments();
         String imageUrl = TextUtils.isEmpty(say.getHead_pic()) ? Constants.PICTURE_URL + say.getHead_pic_thumb() :
@@ -126,11 +127,12 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
             }
         });
 
+        //删除说说
         holder.ivItemDeletesay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onDeleteClick(say.getId(), holder.getAdapterPosition());
+                    onItemClickListener.onDeleteClick(say.getId(),holder.getAdapterPosition());
                 }
             }
         });

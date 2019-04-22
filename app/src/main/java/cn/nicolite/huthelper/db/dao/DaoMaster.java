@@ -30,10 +30,10 @@ public class DaoMaster extends AbstractDaoMaster {
         LessonDao.createTable(db, ifNotExists);
         MenuDao.createTable(db, ifNotExists);
         NoticeDao.createTable(db, ifNotExists);
+        ScheduleQZDao.createTable(db, ifNotExists);
         SearchHistoryDao.createTable(db, ifNotExists);
         TimeAxisDao.createTable(db, ifNotExists);
         UserDao.createTable(db, ifNotExists);
-        ScheduleQZDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -47,10 +47,10 @@ public class DaoMaster extends AbstractDaoMaster {
         LessonDao.dropTable(db, ifExists);
         MenuDao.dropTable(db, ifExists);
         NoticeDao.dropTable(db, ifExists);
+        ScheduleQZDao.dropTable(db, ifExists);
         SearchHistoryDao.dropTable(db, ifExists);
         TimeAxisDao.dropTable(db, ifExists);
         UserDao.dropTable(db, ifExists);
-        ScheduleQZDao.dropTable(db, ifExists);
     }
 
     /**
@@ -78,10 +78,10 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(LessonDao.class);
         registerDaoClass(MenuDao.class);
         registerDaoClass(NoticeDao.class);
+        registerDaoClass(ScheduleQZDao.class);
         registerDaoClass(SearchHistoryDao.class);
         registerDaoClass(TimeAxisDao.class);
         registerDaoClass(UserDao.class);
-        registerDaoClass(ScheduleQZDao.class);
     }
 
     public DaoSession newSession() {
