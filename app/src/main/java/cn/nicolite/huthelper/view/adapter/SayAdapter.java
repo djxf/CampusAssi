@@ -29,6 +29,7 @@ import cn.nicolite.huthelper.model.bean.SayLikedCache;
 import cn.nicolite.huthelper.utils.AnimationTools;
 import cn.nicolite.huthelper.utils.ListUtils;
 import cn.nicolite.huthelper.utils.LogUtils;
+import cn.nicolite.huthelper.utils.ToastUtils;
 import cn.nicolite.huthelper.view.customView.NinePictureLayout;
 import cn.nicolite.huthelper.view.customView.NoScrollLinearLayoutManager;
 import cn.nicolite.huthelper.view.customView.PictureLayout;
@@ -186,7 +187,7 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
             @Override
             public void onClick(View view) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onAddCommentClick(position, say.getId());
+                    onItemClickListener.onAddCommentClick(position, say.getId(),"");
                 }
             }
         });
@@ -223,7 +224,18 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
                         onItemClickListener.onCommentDeleteClick(sayPosition, commentsBean.getId(), commentPosition);
                     }
                 }
+
+                @Override
+                public void onCommentClick(int position, String username) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onAddCommentClick(position, say.getId(),username);
+                    }
+                }
             });
+
+
+
+
         }
         holder.sayContentMore.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -308,7 +320,7 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
     //内部接口
     public interface OnItemClickListener {
 
-        void onAddCommentClick(int position, String sayId);
+        void onAddCommentClick(int position, String sayId,String username);
 
         void onUserClick(String userId, String username);
 
@@ -319,6 +331,7 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
         void onImageClick(int position, List<String> urlList);
 
         void onCommentDeleteClick(int sayPosition, String commentId, int commentPosition);
+
 
     }
 

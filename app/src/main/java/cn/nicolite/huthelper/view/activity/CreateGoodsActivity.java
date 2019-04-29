@@ -158,6 +158,8 @@ public class CreateGoodsActivity extends BaseActivity<IBaseView, BaseActivity> i
                                     showMessage("没有填发布区域");
                                 } else if (TextUtils.isEmpty(tvGoodsPrice.getText().toString())) {
                                     showMessage("没有填写价格");
+                                } else if (tvGoodsPrice.getText().toString().length()>5 || tvGoodsPrice.getText().toString().startsWith("0.") ) {
+                                    showMessage("价格太高或太低,尽量填写整数");
                                 } else {
                                     if (!ListUtils.isEmpty(uriList)) {
                                         createGoodsPresenter.createGoods(activity, uriList);

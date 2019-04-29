@@ -29,6 +29,7 @@ import com.github.jdsjlzx.interfaces.OnNetWorkErrorListener;
 import com.github.jdsjlzx.interfaces.OnRefreshListener;
 import com.github.jdsjlzx.recyclerview.LRecyclerView;
 import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -54,7 +55,8 @@ import cn.nicolite.huthelper.view.activity.UserInfoCardActivity;
 import cn.nicolite.huthelper.view.adapter.SayAdapter;
 import cn.nicolite.huthelper.view.customView.CommonDialog;
 import cn.nicolite.huthelper.view.iview.ISayView;
-
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 
 /**
@@ -140,8 +142,8 @@ SayFragment extends BaseFragment implements ISayView {
         sayAdapter.setOnItemClickListener(new SayAdapter.OnItemClickListener() {
 
             @Override
-            public void onAddCommentClick(int position, String sayId) {
-                showCommitView(position, sayId);
+            public void onAddCommentClick(int position, String sayId,String username) {
+                showCommitView(position, sayId,username);
             }
 
 
@@ -364,7 +366,7 @@ SayFragment extends BaseFragment implements ISayView {
 
 
     //展示评论框
-    private void showCommitView(final int position, final String sayId) {
+    private void showCommitView(final int position, final String sayId,final String username) {
 
         if (addCommitWindow == null || button == null || editText == null) {
             final View popupWindowLayout = LayoutInflater.from(context).inflate(R.layout.popwin_addcommit, rootView, false);
@@ -376,14 +378,55 @@ SayFragment extends BaseFragment implements ISayView {
         }
         if (editText != null) {
             CommUtil.showSoftInput(context, editText);
+            if (username != null && username.length()>0){
+                editText.setText("@" + username + ":");
+                editText.setFocusable(true);
+                editText.setSelection(username.length() + 2);
+            }
         }
 
+//       final Disposable subscribe;
+//        //回复功能
+//        if (editText != null) {
+//            subscribe = RxTextView.textChanges(editText)
+//                    .subscribe(new Consumer<CharSequence>() {
+//                        @Override
+//                        public void accept(CharSequence charSequence) throws Exception {
+//                            if (charSequence.toString().equals("@")) {
+//                                List<String> commentNameList = new ArrayList<>();
+//
+//                                //提取评论用户名
+//                                for (Say.CommentsBean i : sayList.get(position).getComments()) {
+//                                    if (commentNameList.indexOf(i.getUsername()) == -1) {
+//                                        commentNameList.add(i.getUsername());
+//                                    }
+//                                }
+//                                final String[] items = new String[commentNameList.size()];
+//                                commentNameList.toArray(items);
+//                                if (items.length == 0) {
+//                                    ToastUtils.showToastLong("当前无可回复用户");
+//                                    return;
+//                                }
+//
+//                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//                                builder.setTitle("回复")
+//                                        .setItems(items, new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                                editText.setText("@" + items[i] + ":");
+//                                                editText.setFocusable(true);
+//                                                editText.setSelection(items[i].length() + 2);
+//                                            }
+//                                        });
+//                                AlertDialog dialog = builder.create();
+//                                dialog.show();
+//                                commentNameList.clear();
+//                            }
+//                        }
+//                    });
 
-        //
-        if (editText != null) {
-            EditTextWatch myWatch = new EditTextWatch((SayActivity) activity,editText,position,sayList);
-            editText.addTextChangedListener(myWatch);
-        }
+
+//        }
 
 
         if (button != null) {
@@ -402,6 +445,7 @@ SayFragment extends BaseFragment implements ISayView {
                             ToastUtils.showToastShort("请填写评论内容！");
                             return;
                         }
+
                         sayPresenter.addComment(comment, sayId, position);
                     }
                 }
@@ -457,92 +501,5 @@ SayFragment extends BaseFragment implements ISayView {
         sayList.remove(position);
         sayList.add(position, say);
         lRecyclerViewAdapter.notifyItemChanged(position);
-    }
-
-
-
-
-
-
-    //非静态内部类和匿名内部类会隐式持有外部类的引用，容易发生内存泄漏。静态的内部类不会持有外部类的引用
-    private static class EditTextWatch implements TextWatcher {
-
-        private final WeakReference<SayActivity> sayActivityWeakReference;
-        private final WeakReference<EditText> editTextWeakReference;
-        private EditText editText;
-        private List<Say> list;
-        public EditTextWatch(SayActivity sayActivity,EditText editText,int position,List<Say> list) {
-            sayActivityWeakReference = new WeakReference<>(sayActivity);
-            editTextWeakReference = new WeakReference<>(editText);
-            this.editText = editTextWeakReference.get();
-            this.position = position;
-            this.list = list;
-        }
-
-        private int position;
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            SayActivity sayActivity = sayActivityWeakReference.get();
-
-            if (sayActivity != null){
-                try {
-                    List<String> commentNameList = new ArrayList<>();
-                    //CharSequence 必须toString()
-                    if (s.toString().equals("@") && s.toString().length() == 1 ) {
-                        //提取评论用户名
-                        for (Say.CommentsBean i : list.get(position).getComments()) {
-                            if (commentNameList.indexOf(i.getUsername()) == -1) {
-                                commentNameList.add(i.getUsername());
-                            }
-                        }
-                        editText.removeTextChangedListener(this);
-                        String[] items = new String[commentNameList.size()];
-                        commentNameList.toArray(items);
-                        showConmentNameList(items);
-                        commentNameList.clear();
-                        commentNameList = null;
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-
-        public   void showConmentNameList(final String[] items) {
-
-            if (items.length==0){
-                ToastUtils.showToastLong("当前无可回复用户");
-                return;
-            }
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(sayActivityWeakReference.get());
-            builder.setTitle("回复")
-                    .setItems(items, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            editText.setText("@" + items[i] + ":");
-                            editText.setFocusable(true);
-                            editText.setSelection(items[i].length()+2);
-                        }
-                    });
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-        }
-
     }
 }

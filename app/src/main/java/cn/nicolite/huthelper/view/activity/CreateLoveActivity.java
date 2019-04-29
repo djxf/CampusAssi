@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zhihu.matisse.Matisse;
@@ -26,6 +27,9 @@ import cn.nicolite.huthelper.R;
 import cn.nicolite.huthelper.base.BaseActivity;
 import cn.nicolite.huthelper.base.IBaseView;
 import cn.nicolite.huthelper.presenter.CreateLovePresenter;
+import cn.nicolite.huthelper.utils.LogUtils;
+import cn.nicolite.huthelper.utils.SnackbarUtils;
+import cn.nicolite.huthelper.utils.ToastUtils;
 import cn.nicolite.huthelper.view.adapter.ImageAdapter;
 import cn.nicolite.huthelper.view.customView.CommonDialog;
 import cn.nicolite.huthelper.view.iview.ICreateLoveView;
@@ -44,6 +48,8 @@ public class CreateLoveActivity extends BaseActivity<IBaseView,BaseActivity> imp
     ImageView love_add_pic;
     @BindView(R.id.love_recyclerView)
     RecyclerView love_recyclerView;
+    @BindView(R.id.rootView)
+    LinearLayout rootView;
     private List<Uri> uriList = new ArrayList<>();
     private static final int REQUEST_CODE_CHOOSE = 149;
     private ImageAdapter adapter;
@@ -89,11 +95,12 @@ public class CreateLoveActivity extends BaseActivity<IBaseView,BaseActivity> imp
             case R.id.toolbar_back:
                 finish();
                 break;
-            case R.id.add_pic:
+            case R.id.love_add_pic:
                 createLovePresenter.selectImage();
                 break;
             case R.id.toolbar_menu:
-
+                createLovePresenter.createSay(this,uriList);
+                LogUtils.d("list","uriList.size="+uriList.size());
                 break;
         }
     }
@@ -124,12 +131,12 @@ public class CreateLoveActivity extends BaseActivity<IBaseView,BaseActivity> imp
 
     @Override
     public void uploadProgress(String msg) {
-
+        ToastUtils.showToastLong("正在发布中");
     }
 
     @Override
     public void uploadFailure(String msg) {
-
+        SnackbarUtils.showShortSnackbar(rootView, msg);
     }
 
     @Override
@@ -139,17 +146,25 @@ public class CreateLoveActivity extends BaseActivity<IBaseView,BaseActivity> imp
 
     @Override
     public void showLoading() {
+           if (progressDialog == null){
+               progressDialog = new ProgressDialog(context);
+               progressDialog.setMessage("请稍等...");
+               progressDialog.setCancelable(false);
+               progressDialog.show();
+           }
 
     }
 
     @Override
     public void closeLoading() {
-
+            if (progressDialog!=null){
+                progressDialog.dismiss();
+            }
     }
 
     @Override
     public void showMessage(String msg) {
-
+        SnackbarUtils.showShortSnackbar(rootView, msg);
     }
 
     @Override

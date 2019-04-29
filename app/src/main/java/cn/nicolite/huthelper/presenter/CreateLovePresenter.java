@@ -29,6 +29,7 @@ import cn.nicolite.huthelper.network.exception.ExceptionEngine;
 import cn.nicolite.huthelper.utils.CommUtil;
 import cn.nicolite.huthelper.utils.EncryptUtils;
 import cn.nicolite.huthelper.utils.ListUtils;
+import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.view.activity.CreateLoveActivity;
 import cn.nicolite.huthelper.view.iview.ICreateLoveView;
 import io.reactivex.Observer;
@@ -112,6 +113,8 @@ public class CreateLovePresenter extends BasePresenter<ICreateLoveView,CreateLov
                     public void onNext(UploadImages uploadImages) {
                         if (getView() != null) {
                             if (uploadImages.getCode() == 200) {
+                                getView().showMessage("上传图片成功！");
+                                LogUtils.d("TAG","上传图片成功！");
                                 uploadCount.incrementAndGet();
                                 stringBuilder.append("//");
                                 stringBuilder.append(uploadImages.getData());
@@ -120,6 +123,7 @@ public class CreateLovePresenter extends BasePresenter<ICreateLoveView,CreateLov
                                     stringBuilder.delete(0, stringBuilder.length());
                                     uploadCount.set(0);
                                     if (!TextUtils.isEmpty(string)) {
+                                        LogUtils.d("TAG",""+string);
                                         getView().uploadLoveInfo(string);
                                     } else {
                                         getView().uploadFailure("获取上传图片信息失败！");
@@ -129,6 +133,7 @@ public class CreateLovePresenter extends BasePresenter<ICreateLoveView,CreateLov
                                 stringBuilder.delete(0, stringBuilder.length());
                                 uploadCount.set(0);
                                 getView().uploadFailure(String.valueOf("上传图片失败！"));
+                                getView().showMessage("上传图片失败！");
                             }
                         }
                     }
@@ -151,6 +156,7 @@ public class CreateLovePresenter extends BasePresenter<ICreateLoveView,CreateLov
     }
 
     List<File> fileList = new ArrayList<>();
+
 
     public void createSay(Activity activity, final List<Uri> uriList) {
         if (ListUtils.isEmpty(uriList)) {
@@ -197,13 +203,18 @@ public class CreateLovePresenter extends BasePresenter<ICreateLoveView,CreateLov
                             if (getView() != null) {
                                 getView().uploadFailure("压缩图片出现异常！");
                                 getView().showMessage("压缩失败，" + ExceptionEngine.handleException(e).getMsg());
+                                LogUtils.d("TAG","presenter 压缩图片出现异常！");
                             }
                         }
                     }).launch();
         }
-
     }
 
+    /**
+     * 上传表白信息
+     * @param content
+     * @param hidden
+     */
     public void uploadLoveInfo(String content,String hidden){
             APIUtils
                     .INSTANCE
@@ -226,7 +237,10 @@ public class CreateLovePresenter extends BasePresenter<ICreateLoveView,CreateLov
                                     getView().closeLoading();
                                 }
                                 if (simpleResult.getCode() == 200){
-                                    //发布成功
+                                    if (getView()!=null){
+                                        getView().showMessage("发布成功");
+                                        LogUtils.d("TAG","presenter 发布成功");
+                                    }
                                 }
 
                         }
@@ -234,7 +248,9 @@ public class CreateLovePresenter extends BasePresenter<ICreateLoveView,CreateLov
                         @Override
                         public void onError(Throwable e) {
                             if (getView()!=null){
+                                getView().closeLoading();
                                 getView().showMessage("发布失败"+ExceptionEngine.handleException(e));
+                                LogUtils.d("TAG","presenter 发布失败"+ExceptionEngine.handleException(e));
                             }
                         }
 
@@ -244,6 +260,4 @@ public class CreateLovePresenter extends BasePresenter<ICreateLoveView,CreateLov
                         }
                     });
     }
-
-
 }

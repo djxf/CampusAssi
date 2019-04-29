@@ -75,7 +75,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             }
         }, 0, userName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+        richContent.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                if (onItemClickListener != null){
+                    onItemClickListener.onCommentClick(sayPosition,commentsBean.getUsername());
+                }
+            }    @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+            }
 
+
+        },userName.length(),content.length(),Spanned.SPAN_COMPOSING);
+
+        richContent.setSpan(new ForegroundColorSpan(Color.parseColor("#404040")), userName.length(),content.length(),Spanned.SPAN_COMPOSING);
         richContent.setSpan(new ForegroundColorSpan(Color.parseColor("#1dcbdb")), 0, userName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         if (commentsBean.getUser_id().equals(userId) && !TextUtils.isEmpty(commentsBean.getId())) {
@@ -97,9 +112,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
             richContent.setSpan(new ForegroundColorSpan(Color.RED), content.length(), richContent.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-
         holder.text.setText(richContent);
         holder.text.setMovementMethod(LinkMovementMethod.getInstance());
+
 
     }
 
@@ -123,10 +138,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         void onDeleteClick(int sayPosition, int commentPosition, Say.CommentsBean commentsBean);
 
-
+        //评论内容点击接口
+        void onCommentClick(int position,String username);
     }
+
+
+
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
+
+
+    public CommentAdapter() {
+        super();
+    }
+
 }
