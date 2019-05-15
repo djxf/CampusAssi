@@ -1,5 +1,6 @@
 package cn.nicolite.huthelper.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -86,6 +87,11 @@ public class SearchResultActivity extends BaseActivity<IBaseView, BaseActivity> 
                     toolbarTitle.setText(String.valueOf(extras + "的说说"));
                 }
                 break;
+                case SearchPresenter.TYPE_SEARCHSAY:
+                    if (!searchText.equals("")){
+                        toolbarTitle.setText("共有结果关于"+searchText+"条");
+                    }
+                    break;
             default:
                 toolbarTitle.setText(searchText);
                 break;
@@ -130,9 +136,18 @@ public class SearchResultActivity extends BaseActivity<IBaseView, BaseActivity> 
             case SearchPresenter.TYPE_MYSAY:
                 transaction.replace(R.id.fragment_content, SayFragment.newInstance(SayFragment.MYSAY, searchText));
                 break;
+                case SearchPresenter.TYPE_SEARCHSAY:
+                    transaction.replace(R.id.fragment_content,SayFragment.newInstance(SayFragment.SEARCHSAY,searchText));
+                    break;
+
             default:
                 ToastUtils.showToastShort("未知类型！");
         }
         transaction.commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

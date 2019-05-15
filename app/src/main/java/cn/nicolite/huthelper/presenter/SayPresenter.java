@@ -12,6 +12,7 @@ import cn.nicolite.huthelper.model.bean.User;
 import cn.nicolite.huthelper.network.APIUtils;
 import cn.nicolite.huthelper.network.exception.ExceptionEngine;
 import cn.nicolite.huthelper.utils.ListUtils;
+import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.utils.ToastUtils;
 import cn.nicolite.huthelper.view.fragment.SayFragment;
 import cn.nicolite.huthelper.view.iview.ISayView;
@@ -22,6 +23,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by nicolite on 17-11-14.
+ * Change by djxf on 2019
  */
 
 public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
@@ -30,6 +32,7 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
         super(view, activity);
     }
 
+    //Manual 手动的
     public void showSayList(int type, boolean isManual) {
         switch (type) {
             case SayFragment.ALLSAY:
@@ -39,21 +42,35 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                 loadHotSay(1, false);
                 break;
             case SayFragment.MYSAY:
-                //null
+                //null  我的说说
                 break;
+                case SayFragment.SEARCHSAY:
+                    //搜索说说
+                    //loadSearchSay(1,true,);
+                    break;
 
         }
     }
 
-    public void loadMore(int type, int page) {
+    /**
+     * 加载更多
+     * @param type
+     * @param page
+     */
+    public void loadMore(int type, int page,String key_word) {
         switch (type) {
             case SayFragment.ALLSAY:
                 loadSayList(page, true, true);
                 break;
             case SayFragment.MYSAY:
+
                 break;
             case SayFragment.HOTSAY:
-                //null
+                //默认加载一页 不进行加载更多
+                break;
+            case SayFragment.SEARCHSAY:
+                //加载更多搜索说说
+                loadSearchSay(page,true,key_word);
                 break;
         }
     }
@@ -135,6 +152,10 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                 });
     }
 
+    /**
+     * 点赞说说
+     * @param sayId
+     */
     public void likeSay(String sayId) {
 
         APIUtils.INSTANCE
@@ -169,6 +190,12 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                 });
     }
 
+    /**
+     * 添加评论
+     * @param comment
+     * @param sayId
+     * @param position
+     */
     public void addComment(final String comment, String sayId, final int position) {
 
         if (getView() != null) {
@@ -220,6 +247,12 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                 });
     }
 
+    /**
+     * 加载说说列表1
+     * @param page
+     * @param isManual
+     * @param isLoadMore
+     */
     public void loadSayList(final int page, final boolean isManual, final boolean isLoadMore) {
 
         loadLikedSay(configure.getStudentKH(), configure.getAppRememberCode(), new Observer<HttpResult<List<String>>>() {
@@ -267,6 +300,11 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
         });
     }
 
+    /**
+     *
+     * @param page
+     * @param isLoadMore
+     */
     private void loadSayList(final int page, final boolean isLoadMore) {
 
         APIUtils.INSTANCE
@@ -286,8 +324,8 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                         if (getView() != null) {
                             getView().closeLoading();
                             if (listHttpPageResult.getCode() == 200) {
-                                if (isLoadMore) {
-                                    if (page <= listHttpPageResult.getPageination()) {
+                                if (isLoadMore ) {
+                                    if (page <= listHttpPageResult.getPageination()  && listHttpPageResult.getPageination()!=1) {
                                         getView().loadMore(listHttpPageResult.getData());
                                     } else {
                                         getView().noMoreData();
@@ -332,6 +370,13 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                 });
     }
 
+    /**
+     *
+     *
+     * @param studentKh
+     * @param appCode
+     * @param observer
+     */
     public void loadLikedSay(String studentKh, String appCode, Observer<HttpResult<List<String>>> observer) {
         APIUtils.INSTANCE
                 .getSayAPI()
@@ -371,6 +416,15 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
 
     }
 
+
+    /**
+     *
+     * 获取指定用户的说说
+     * @param userId
+     * @param page
+     * @param isManual
+     * @param isLoadMore
+     */
     public void loadSayListByUserId(final String userId, final int page, final boolean isManual, final boolean isLoadMore) {
 
         loadLikedSay(configure.getStudentKH(), configure.getAppRememberCode(), new Observer<HttpResult<List<String>>>() {
@@ -440,7 +494,7 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                             getView().closeLoading();
                             if (listHttpPageResult.getCode() == 200) {
                                 if (isLoadMore) {
-                                    if (page <= listHttpPageResult.getPageination()) {
+                                    if (page <= listHttpPageResult.getPageination()  && listHttpPageResult.getPageination()!=1) {
                                         getView().loadMore(listHttpPageResult.getData());
                                     } else {
                                         getView().noMoreData();
@@ -482,6 +536,12 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                 });
     }
 
+    /**
+     *
+     * 加载热门说说
+     * @param page
+     * @param isLoadMore
+     */
     public void loadHotSay(final int page, final boolean isLoadMore) {
         APIUtils.INSTANCE
                 .getSayAPI()
@@ -538,6 +598,12 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                 });
     }
 
+    /**
+     *
+     * 加载我的互动说说
+     * @param page
+     * @param isLoadMore
+     */
     public void loadMyTalkSay(final int page,final boolean isLoadMore) {
         APIUtils.INSTANCE
                 .getSayAPI()
@@ -557,7 +623,8 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                             getView().closeLoading();
                             if (listHttpPageResult.getCode() == 200) {
                                 if (isLoadMore) {
-                                    if (page <= listHttpPageResult.getPageination()) {
+                                    //刷新后会从第一页开始重新加载 如果此时pageination==1 会重复添加数据
+                                    if (page <= listHttpPageResult.getPageination() && listHttpPageResult.getPageination()!=1) {
                                         getView().loadMore(listHttpPageResult.getData());
                                     } else {
                                         getView().noMoreData();
@@ -593,5 +660,67 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                     }
                 });
 
+    }
+
+    /**
+     *
+     * 搜索说说
+     * @param page
+     * @param isLoadMore
+     */
+    public void loadSearchSay(final int page, final boolean isLoadMore,final String key_word) {
+        APIUtils.INSTANCE
+                .getSayAPI()
+                .getSearchSayList(configure.getStudentKH(),configure.getAppRememberCode(),key_word,page)
+                .compose(getActivity().<HttpPageResult<List<Say>>>bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<HttpPageResult<List<Say>>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        LogUtils.d("SayFragment","page:"+page+"isLoadMore"+isLoadMore);
+                    }
+
+                    @Override
+                    public void onNext(HttpPageResult<List<Say>> listHttpPageResult) {
+                        if (getView() != null) {
+                            getView().closeLoading();
+                            if (listHttpPageResult.getCode() == 200) {
+                                if (isLoadMore) {
+                                    if (page <= listHttpPageResult.getPageination()) {
+                                        getView().loadMore(listHttpPageResult.getData());
+                                    } else {
+                                        getView().noMoreData();
+                                    }
+                                    return;
+                                }
+                                getView().showSearchSayList(listHttpPageResult.getData());
+                                return;
+                            }
+                            if (ListUtils.isEmpty(listHttpPageResult.getData())) {
+                                getView().showMessage("暂时没有相关内容！");
+                            }
+                            getView().showHotSayList(listHttpPageResult.getData());
+                        } else {
+                            getView().closeLoading();
+                            getView().showMessage("加载失败!");
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (getView() != null) {
+                            getView().closeLoading();
+                            getView().showMessage("加载失败，" + ExceptionEngine.handleException(e).getMsg());
+
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }

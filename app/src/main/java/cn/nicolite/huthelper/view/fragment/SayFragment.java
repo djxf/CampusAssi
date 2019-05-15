@@ -29,7 +29,6 @@ import com.github.jdsjlzx.interfaces.OnNetWorkErrorListener;
 import com.github.jdsjlzx.interfaces.OnRefreshListener;
 import com.github.jdsjlzx.recyclerview.LRecyclerView;
 import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
-import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -58,15 +57,11 @@ import cn.nicolite.huthelper.view.iview.ISayView;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
-
 /**
- * Created by nicolite on 17-11-14.
+ * Created by djxf on 19-05-15
  */
 
-public class
-
-
-SayFragment extends BaseFragment implements ISayView {
+public class SayFragment extends BaseFragment implements ISayView {
     @BindView(R.id.lRecyclerView)
     LRecyclerView lRecyclerView;
     @BindView(R.id.rootView)
@@ -80,6 +75,7 @@ SayFragment extends BaseFragment implements ISayView {
     public static final int MYSAY = 1;//我的说说
     public static final int HOTSAY = 2;//热门说说
     public static final int MYTALK = 3;//我的互动
+    public static final int SEARCHSAY = 4; //搜索说说
     private SayPresenter sayPresenter;
     private boolean isNoMore = false;
     private int currentPage = 1;
@@ -113,6 +109,8 @@ SayFragment extends BaseFragment implements ISayView {
                 searchText = arguments.getString("searchText", "");
             } else if (type == MYTALK) {
                 searchText = arguments.getString("searchText", "");
+            }else if (type == SEARCHSAY){
+                searchText = arguments.getString("searchText","");
             }
         }
     }
@@ -206,6 +204,7 @@ SayFragment extends BaseFragment implements ISayView {
         lRecyclerView.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
+                LogUtils.d("SayFragment","Refresh");
                 currentPage = 1;
                 switch (type) {
                     case SayFragment.ALLSAY:
@@ -220,6 +219,10 @@ SayFragment extends BaseFragment implements ISayView {
                     case SayFragment.MYTALK:
                         sayPresenter.loadMyTalkSay(1, true);
                         break;
+                    case SayFragment.SEARCHSAY:
+                        //搜索说说
+                        sayPresenter.loadSearchSay(1,true,searchText);
+                        break;
                 }
             }
         });
@@ -227,10 +230,11 @@ SayFragment extends BaseFragment implements ISayView {
         lRecyclerView.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
+                LogUtils.d("SayFragment","onLoadMore");
                 if (!isNoMore) {
                     switch (type) {
                         case SayFragment.ALLSAY:
-                            sayPresenter.loadMore(type, ++currentPage);
+                            sayPresenter.loadMore(type, ++currentPage,"");
                             break;
                         case SayFragment.MYSAY:
                             sayPresenter.loadSayListByUserId(searchText, ++currentPage, true, true);
@@ -240,6 +244,9 @@ SayFragment extends BaseFragment implements ISayView {
                             break;
                         case SayFragment.MYTALK:
                             sayPresenter.loadMyTalkSay(++currentPage, true);
+                            break;
+                        case SayFragment.SEARCHSAY:
+                            sayPresenter.loadSearchSay(++currentPage,true,searchText);
                             break;
                     }
                 }
@@ -252,11 +259,13 @@ SayFragment extends BaseFragment implements ISayView {
                 if (!isNoMore) {
                     switch (type) {
                         case SayFragment.ALLSAY:
-                            sayPresenter.loadMore(type, currentPage);
+                            sayPresenter.loadMore(type, currentPage,"");
                             break;
                         case SayFragment.MYSAY:
                             sayPresenter.loadSayListByUserId(searchText, currentPage, true, true);
                             break;
+                        case SayFragment.SEARCHSAY:
+                            sayPresenter.loadSearchSay(currentPage,true,searchText);
                     }
                 }
             }
@@ -305,6 +314,14 @@ SayFragment extends BaseFragment implements ISayView {
 
     @Override
     public void showTalkSayList(List<Say> list) {
+        sayList.clear();
+        sayList.addAll(list);
+        lRecyclerView.refreshComplete(list.size());
+        lRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showSearchSayList(List<Say> list) {
         sayList.clear();
         sayList.addAll(list);
         lRecyclerView.refreshComplete(list.size());
@@ -384,49 +401,6 @@ SayFragment extends BaseFragment implements ISayView {
                 editText.setSelection(username.length() + 2);
             }
         }
-
-//       final Disposable subscribe;
-//        //回复功能
-//        if (editText != null) {
-//            subscribe = RxTextView.textChanges(editText)
-//                    .subscribe(new Consumer<CharSequence>() {
-//                        @Override
-//                        public void accept(CharSequence charSequence) throws Exception {
-//                            if (charSequence.toString().equals("@")) {
-//                                List<String> commentNameList = new ArrayList<>();
-//
-//                                //提取评论用户名
-//                                for (Say.CommentsBean i : sayList.get(position).getComments()) {
-//                                    if (commentNameList.indexOf(i.getUsername()) == -1) {
-//                                        commentNameList.add(i.getUsername());
-//                                    }
-//                                }
-//                                final String[] items = new String[commentNameList.size()];
-//                                commentNameList.toArray(items);
-//                                if (items.length == 0) {
-//                                    ToastUtils.showToastLong("当前无可回复用户");
-//                                    return;
-//                                }
-//
-//                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//                                builder.setTitle("回复")
-//                                        .setItems(items, new DialogInterface.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                                editText.setText("@" + items[i] + ":");
-//                                                editText.setFocusable(true);
-//                                                editText.setSelection(items[i].length() + 2);
-//                                            }
-//                                        });
-//                                AlertDialog dialog = builder.create();
-//                                dialog.show();
-//                                commentNameList.clear();
-//                            }
-//                        }
-//                    });
-
-
-//        }
 
 
         if (button != null) {

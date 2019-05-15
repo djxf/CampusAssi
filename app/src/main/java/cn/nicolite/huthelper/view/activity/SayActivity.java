@@ -76,7 +76,7 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
         transaction.commit();
     }
 
-    @OnClick({R.id.toolbar_back, R.id.toolbar_menu,R.id.bt_best_hot,R.id.bt_best_fresh})
+    @OnClick({R.id.toolbar_back, R.id.toolbar_menu,R.id.bt_best_hot,R.id.bt_best_fresh,R.id.toolbar_search})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.toolbar_back:
@@ -100,6 +100,12 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
                 FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
                 transaction2.replace(R.id.fragment_content,SayFragment.newInstance(SayFragment.HOTSAY,null));
                 transaction2.commit();
+                break;
+            case R.id.toolbar_search:
+                //搜索按钮 传值600
+                Bundle bundle =new Bundle();
+                bundle.putInt("type",600);
+                startActivity(SearchActivity.class,bundle);
                 break;
         }
     }
@@ -156,7 +162,6 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_content,SayFragment.newInstance(SayFragment.HOTSAY,null));
                     transaction.commit();
-
                 }
             });
             tvAdd.setOnClickListener(new View.OnClickListener() {
@@ -172,7 +177,7 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
                 public void onClick(View v) {
                     menuListWindow.dismiss();
                     Bundle bundle = new Bundle();
-                    if (user != null){
+                    if (user.getStudentKH() != null){
                         bundle.putInt("type", SearchPresenter.TYPE_MYSAY);
                         bundle.putString("searchText", user.getUser_id());
                         bundle.putString("extras",user.getUsername());
