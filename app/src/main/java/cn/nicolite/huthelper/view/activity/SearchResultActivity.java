@@ -89,7 +89,7 @@ public class SearchResultActivity extends BaseActivity<IBaseView, BaseActivity> 
                 break;
                 case SearchPresenter.TYPE_SEARCHSAY:
                     if (!searchText.equals("")){
-                        toolbarTitle.setText("共有结果关于"+searchText+"条");
+                        toolbarTitle.setText("为你找到关于："+searchText+"的最优结果");
                     }
                     break;
             default:

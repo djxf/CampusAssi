@@ -1,10 +1,14 @@
 package cn.nicolite.huthelper.view.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,16 +45,19 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
 
+    private String searchtext;//说说来源方式如果是搜索而来对内容中字体进行加色 1 表示正常
     private Context context;
     private List<Say> sayList;
     private OnItemClickListener onItemClickListener;
     private String userId;
     private static boolean isFirstClick = true;
 
-    public SayAdapter(Context context, List<Say> sayList) {
+    public SayAdapter(Context context, List<Say> sayList,String searchtext) {
         this.context = context;
         this.sayList = sayList;
         userId = DaoUtils.getLoginUser();
+        this.searchtext = searchtext;
+
     }
 
     @NonNull
@@ -82,19 +89,30 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
         holder.tvItemSayTime.setText(say.getCreated_on());
         holder.tvItemSayXy.setText(say.getDep_name());
         holder.tvSayItemLikenum.setText(say.getLikes());
-        holder.tvItemSaycontent.setText(say.getContent().length()>200?say.getContent().substring(0,199)+"...":say.getContent());
+
+        if (say.getContent().contains(searchtext) && !searchtext.equals("") && searchtext!=null){
+            holder.sayContentMore.setVisibility(View.INVISIBLE);
+            final String content = say.getContent();
+            SpannableStringBuilder stringBuilder = new SpannableStringBuilder(content);
+            stringBuilder.setSpan(new ForegroundColorSpan(Color.parseColor("#FF4081")),say.getContent().indexOf(searchtext),say.getContent().indexOf(searchtext)+searchtext.length(),Spanned.SPAN_COMPOSING);
+            holder.tvItemSaycontent.setText(stringBuilder);
+        }else {
+            holder.tvItemSaycontent.setText(say.getContent().length()>200?say.getContent().substring(0,199)+"...":say.getContent());
+            //是否显示更多
+            if (say.getContent().length()>200){
+                holder.sayContentMore.setVisibility(View.VISIBLE);
+                holder.sayContentMore.setText("更多");
+            }else {
+                holder.sayContentMore.setVisibility(View.INVISIBLE);
+            }
+        }
+
         if (say.getUser_id().equals(userId)) {
             holder.ivItemDeletesay.setVisibility(View.VISIBLE);
         } else {
             holder.ivItemDeletesay.setVisibility(View.GONE);
         }
-        //是否显示更多
-        if (say.getContent().length()>200){
-            holder.sayContentMore.setVisibility(View.VISIBLE);
-            holder.sayContentMore.setText("更多");
-        }else {
-            holder.sayContentMore.setVisibility(View.INVISIBLE);
-        }
+
 
         say.setLike(SayLikedCache.isHave(say.getId()));
         // 取出bean中当记录状态是否为true，是的话则给img设置focus点赞图片

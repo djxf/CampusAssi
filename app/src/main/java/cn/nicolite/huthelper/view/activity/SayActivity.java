@@ -72,6 +72,8 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
         toolbarTitle.setText("段子");
         transaction = getSupportFragmentManager().beginTransaction();
         fragment = SayFragment.newInstance(SayFragment.ALLSAY, null);
+        //transaction.replace(id,fragment):先检查队列中是否已经存在，存在就会崩溃，不存在就会进入队列并把其他fragment清出队列，最后显示该fragment到指定布局中。
+        //生命周期的调用：同add(id, fragment)。
         transaction.replace(R.id.fragment_content, fragment);
         transaction.commit();
     }
@@ -90,16 +92,20 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
                 buttonhot.setTextColor(Color.BLACK);
                 toolbarTitle.setText("段子");
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_content,SayFragment.newInstance(SayFragment.ALLSAY,null));
+                fragment = SayFragment.newInstance(SayFragment.ALLSAY,null);
+                transaction.replace(R.id.fragment_content,fragment);
                 transaction.commit();
+
                 break;
             case R.id.bt_best_hot:
                 buttonre.setTextColor(Color.BLACK);
                 buttonhot.setTextColor(Color.rgb(0x1d,0xcb,0xdb));
                 toolbarTitle.setText("热门段子");
                 FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
-                transaction2.replace(R.id.fragment_content,SayFragment.newInstance(SayFragment.HOTSAY,null));
+                fragment = SayFragment.newInstance(SayFragment.HOTSAY,null);
+                transaction2.replace(R.id.fragment_content,fragment,null);
                 transaction2.commit();
+
                 break;
             case R.id.toolbar_search:
                 //搜索按钮 传值600
@@ -212,6 +218,7 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //从activity传递响应数据到fragment
         if (fragment != null) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }

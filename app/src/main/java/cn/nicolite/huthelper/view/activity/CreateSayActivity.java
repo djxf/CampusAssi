@@ -138,7 +138,7 @@ public class CreateSayActivity extends BaseActivity<IBaseView, BaseActivity> imp
 
     @Override
     public void showMessage(String msg) {
-        SnackbarUtils.showShortSnackbar(rootView, msg);
+        SnackbarUtils.showLongSnackbar(rootView, msg);
     }
 
     @Override

@@ -49,7 +49,7 @@ class AboutFragment : BaseFragment() {
 
         permission_message.setOnClickListener {
             val bundle1 = Bundle()
-            bundle1.putInt("type", WebViewActivity.TYPE_PERMISSION)
+            bundle1.putInt("type", WebViewActivity.TYPE_OPEN_SOURCE)
             bundle1.putString("url", Constants.PERMISSON)
             bundle1.putString("title", "软件许可协议")
             startActivity(WebViewActivity::class.java, bundle1)

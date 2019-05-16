@@ -678,7 +678,7 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                 .subscribe(new Observer<HttpPageResult<List<Say>>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        LogUtils.d("SayFragment","page:"+page+"isLoadMore"+isLoadMore);
+
                     }
 
                     @Override

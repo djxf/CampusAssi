@@ -157,7 +157,7 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
 
     List<File> fileList = new ArrayList<>();
 
-    public void createSay(Activity activity, final List<Uri> uriList) {
+    public void createSay(Activity activity, final List<Uri> uriList){
         if (ListUtils.isEmpty(uriList)) {
             if (getView() != null) {
                 getView().showMessage("未选择图片！");

@@ -57,7 +57,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     public void onBindViewHolder(@NonNull final CommentViewHolder holder, final int position) {
         final Say.CommentsBean commentsBean = commentsBeanList.get(position);
         String userName = commentsBean.getUsername() + ": ";
-        String content = userName + commentsBean.getComment();
+        final String content = userName + commentsBean.getComment();
         SpannableStringBuilder richContent = new SpannableStringBuilder(content);
 
         richContent.setSpan(new ClickableSpan() {
@@ -75,22 +75,26 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             }
         }, 0, userName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        richContent.setSpan(new ClickableSpan() {
-            @Override
-            public void onClick(@NonNull View widget) {
-                if (onItemClickListener != null){
-                    onItemClickListener.onCommentClick(sayPosition,commentsBean.getUsername());
+        if (!content.contains("http") && !content.contains("www")){
+            richContent.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View widget) {
+                    if (onItemClickListener != null && !content.contains("http") && !content.contains("www")){
+                        onItemClickListener.onCommentClick(sayPosition,commentsBean.getUsername());
+                    }
+                }    @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
                 }
-            }    @Override
-            public void updateDrawState(TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setUnderlineText(false);
-            }
 
 
-        },userName.length(),content.length(),Spanned.SPAN_COMPOSING);
+            },userName.length(),content.length(),Spanned.SPAN_COMPOSING);
+            richContent.setSpan(new ForegroundColorSpan(Color.parseColor("#404040")), userName.length(),content.length(),Spanned.SPAN_COMPOSING);
+        }
 
-        richContent.setSpan(new ForegroundColorSpan(Color.parseColor("#404040")), userName.length(),content.length(),Spanned.SPAN_COMPOSING);
+
+
         richContent.setSpan(new ForegroundColorSpan(Color.parseColor("#1dcbdb")), 0, userName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         if (commentsBean.getUser_id().equals(userId) && !TextUtils.isEmpty(commentsBean.getId())) {

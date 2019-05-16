@@ -131,7 +131,7 @@ public class SayFragment extends BaseFragment implements ISayView {
             }
         });
 
-        sayAdapter = new SayAdapter(context, sayList);
+        sayAdapter = new SayAdapter(context, sayList,searchText);
         lRecyclerViewAdapter = new LRecyclerViewAdapter(sayAdapter);
         lRecyclerView.setAdapter(lRecyclerViewAdapter);
         sayPresenter = new SayPresenter(this, this);
@@ -204,7 +204,6 @@ public class SayFragment extends BaseFragment implements ISayView {
         lRecyclerView.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
-                LogUtils.d("SayFragment","Refresh");
                 currentPage = 1;
                 switch (type) {
                     case SayFragment.ALLSAY:
@@ -221,7 +220,7 @@ public class SayFragment extends BaseFragment implements ISayView {
                         break;
                     case SayFragment.SEARCHSAY:
                         //搜索说说
-                        sayPresenter.loadSearchSay(1,true,searchText);
+                        sayPresenter.loadSearchSay(1,false,searchText);
                         break;
                 }
             }
@@ -230,7 +229,6 @@ public class SayFragment extends BaseFragment implements ISayView {
         lRecyclerView.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                LogUtils.d("SayFragment","onLoadMore");
                 if (!isNoMore) {
                     switch (type) {
                         case SayFragment.ALLSAY:
@@ -246,7 +244,7 @@ public class SayFragment extends BaseFragment implements ISayView {
                             sayPresenter.loadMyTalkSay(++currentPage, true);
                             break;
                         case SayFragment.SEARCHSAY:
-                            sayPresenter.loadSearchSay(++currentPage,true,searchText);
+                            sayPresenter.loadSearchSay(++currentPage,false,searchText);
                             break;
                     }
                 }
@@ -317,7 +315,7 @@ public class SayFragment extends BaseFragment implements ISayView {
         sayList.clear();
         sayList.addAll(list);
         lRecyclerView.refreshComplete(list.size());
-        lRecyclerViewAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -463,7 +461,9 @@ public class SayFragment extends BaseFragment implements ISayView {
     }
 
     public void refreshData() {
-        lRecyclerView.forceToRefresh();
+        if (lRecyclerView!=null){
+            lRecyclerView.forceToRefresh();
+        }
     }
 
     public void deleteItem(int position) {
