@@ -63,8 +63,6 @@ class AboutFragment : BaseFragment() {
             bundle3.putString("url", Constants.OPEN_SOURCE)
             bundle3.putString("title", "HutHelper")
             startActivity(WebViewActivity::class.java, bundle3)
-
-
         }
 
         prototal.setOnClickListener {
@@ -73,8 +71,6 @@ class AboutFragment : BaseFragment() {
             bundle4.putString("url", Constants.PROTATOL)
             bundle4.putString("title", "HutHelper")
             startActivity(WebViewActivity::class.java, bundle4)
-
-
         }
         rating.setOnClickListener {
             try {
