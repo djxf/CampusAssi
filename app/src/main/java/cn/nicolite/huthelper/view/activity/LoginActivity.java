@@ -11,6 +11,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,6 +43,8 @@ public class LoginActivity extends BaseActivity<IBaseView, BaseActivity> impleme
     EditText etPassword;
     @BindView(R.id.tv_message)
     TextView tvMessage;
+    @BindView(R.id.btn_register)
+    Button btn_register;
     private LoginPresenter loginPresenter;
     private LoadingDialog loadingDialog;
 
@@ -96,7 +99,7 @@ public class LoginActivity extends BaseActivity<IBaseView, BaseActivity> impleme
         etUsername.setText(username);
     }
 
-    @OnClick(R.id.btn_login)
+    @OnClick({R.id.btn_login,R.id.btn_register})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.btn_login:
@@ -104,9 +107,9 @@ public class LoginActivity extends BaseActivity<IBaseView, BaseActivity> impleme
 
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
-               SharedPreferences.Editor username_sp = this.getSharedPreferences("login_username",MODE_PRIVATE).edit();
-               username_sp.putString("username",username);
-               username_sp.apply();
+                SharedPreferences.Editor username_sp = this.getSharedPreferences("login_username",MODE_PRIVATE).edit();
+                username_sp.putString("username",username);
+                username_sp.apply();
 
 
                 if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)){
@@ -115,6 +118,13 @@ public class LoginActivity extends BaseActivity<IBaseView, BaseActivity> impleme
                 }
 
                 loginPresenter.login(username, password);
+                break;
+            case R.id.btn_register:
+                Bundle bundle = new Bundle();
+                bundle.putInt("type", WebViewActivity.TYPE_CHANGE_PWD);
+                bundle.putString("title", "注册");
+                bundle.putString("url", Constants.REGISTER);
+                LoginActivity.this.startActivity(WebViewActivity.class, bundle);
                 break;
         }
     }

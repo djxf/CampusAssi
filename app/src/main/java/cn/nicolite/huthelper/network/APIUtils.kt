@@ -13,7 +13,6 @@ object APIUtils {
 
     fun getLoginAPI(): LoginAPI = retrofit.create(LoginAPI::class.java)
 
-
     fun getMarketAPI(): MarketAPI = retrofit.create(MarketAPI::class.java)
 
     fun getSayAPI(): SayAPI = retrofit.create(SayAPI::class.java)

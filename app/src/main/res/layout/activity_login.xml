@@ -73,17 +73,38 @@
             android:textSize="15sp" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/btn_login"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="283dp"
-        android:layout_height="42dp"
-        android:layout_gravity="center_horizontal"
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:background="@drawable/login_btnbg"
-        android:text="登录"
-        android:textColor="#1dbbdb"
-        android:textSize="13sp" />
+        android:gravity="center_horizontal"
+        >
+
+        <Button
+            android:id="@+id/btn_register"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="131dp"
+            android:layout_height="42dp"
+            android:background="@drawable/login_btnbg"
+            android:text="注册"
+            android:textColor="#1dbbdb"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_login"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="131dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/login_btnbg"
+            android:text="登录"
+            android:textColor="#1dbbdb"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/tv_message"
