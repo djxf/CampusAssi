@@ -91,7 +91,7 @@ public class SyllabusItemActivity extends BaseActivity<IBaseView, BaseActivity> 
     String[] coursenumlists;
     private int weekSelected = 0;
     private int courseNumSelected = 0;
-    private boolean[] weeklist = new boolean[20];
+    private boolean[] weeklist = new boolean[20];//周数列表
     private LessonDao lessonDao;
     private SyllabusItemAdapter adapter;
 
@@ -271,6 +271,7 @@ public class SyllabusItemActivity extends BaseActivity<IBaseView, BaseActivity> 
         weekSelected = Integer.parseInt(lesson.getXqj()) - 1;
         courseNumSelected = (Integer.parseInt(lesson.getDjj()) + 1) / 2 - 1;
 
+        LogUtils.d(TAG, "lesson zs"+lesson.getZs());
         String[] ws = lesson.getZs().split(",");
         for (String s : ws) {
             if (!TextUtils.isEmpty(s)) {
