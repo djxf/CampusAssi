@@ -426,7 +426,7 @@ public class SpareFragment extends BaseFragment {
                         if (lesson.getDjj().equals(upperCourse.getDjj()) && lesson.getXqj().equals(upperCourse.getXqj())) {
                             boolean change = false;
                             for (int i = 0; i < lList.size(); i++) {
-                                if (lList.get(i).getName().equals(lesson.getName())) {
+                                if (lList.get(i).getName().equals(lesson.getName())&& lList.get(i).getRoom().equals(lesson.getRoom())) {
                                     if (CommUtil.ifHaveCourse(lesson, mTable.get().CurrWeek)) {
                                         upperCourse = lesson;
                                         index = i;

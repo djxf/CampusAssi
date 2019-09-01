@@ -14,6 +14,7 @@ import android.view.View
 import cn.nicolite.huthelper.R
 import cn.nicolite.huthelper.kBase.BaseFragment
 import cn.nicolite.huthelper.model.Constants
+import cn.nicolite.huthelper.model.bean.ClassTimeTable
 import cn.nicolite.huthelper.model.bean.Code
 import cn.nicolite.huthelper.model.bean.User
 import cn.nicolite.huthelper.presenter.UserInfoPresenter
@@ -21,6 +22,10 @@ import cn.nicolite.huthelper.utils.*
 import cn.nicolite.huthelper.view.activity.WebViewActivity
 import cn.nicolite.huthelper.view.customView.CommonDialog
 import cn.nicolite.huthelper.view.iview.IUserInfoView
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder
+import com.bigkoo.pickerview.listener.OnOptionsSelectChangeListener
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener
+import com.bigkoo.pickerview.view.OptionsPickerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.yalantis.ucrop.UCrop
@@ -29,7 +34,9 @@ import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.engine.impl.GlideEngine
 import kotlinx.android.synthetic.main.activity_user_info_card.*
 import kotlinx.android.synthetic.main.fragment_user_info.*
+import kotlinx.android.synthetic.main.popup_say_choose.*
 import java.io.File
+import java.lang.Exception
 
 
 /**
@@ -41,7 +48,7 @@ class UserInfoFragment : BaseFragment(), IUserInfoView {
 
 
     private val userInfoPresenter: UserInfoPresenter = UserInfoPresenter(this, this)
-
+    private var mallclass : ClassTimeTable = ClassTimeTable()
     override fun setLayoutId(): Int {
         return R.layout.fragment_user_info
     }
@@ -50,6 +57,7 @@ class UserInfoFragment : BaseFragment(), IUserInfoView {
         super.doBusiness()
 
         userInfoPresenter.showUserData()
+        userInfoPresenter.getAllClass()
 
         rl_user_headview.setOnClickListener {
             userInfoPresenter.changAvatar()
@@ -93,43 +101,17 @@ class UserInfoFragment : BaseFragment(), IUserInfoView {
                     .show()
         }
 
+        //学院监听
         rl_user_college.setOnClickListener{
-            val commonDialog3 = CommonDialog(context)
-            commonDialog3
-                    .setTitle("请输入新的学院加班级格式：学院-班级")
-                    .setInput()
-                    .setPositiveButton("确定"){
-                        val  inputText = commonDialog3.inputText.replace('-','-')
-                        var strlist : List<String> = inputText.split("-")
-                        if (strlist.size==2){
-                            userInfoPresenter.changeCollegeAndClass(strlist.get(0),strlist.get(1))
-                            commonDialog3.dismiss()
-                        }else{
-                            ToastUtils.showToastLong("格式错误，-必须为英文状态下")
-                        }
-
-                    }
-                    .setNegativeButton("不改了", null)
-                    .show()
+            changeBj()
         }
 
+        //班级监听
         rl_user_class.setOnClickListener{
-            val commonDialog4 = CommonDialog(context)
-            commonDialog4
-                    .setTitle("请输入新的学院加班级格式：学院-班级")
-                    .setInput()
-                    .setPositiveButton("确定"){
-                        val  inputText = commonDialog4.inputText
-                        var strlist : List<String> = inputText.split("-")
-                        if (strlist.size==2){
-                            userInfoPresenter.changeCollegeAndClass(strlist.get(0),strlist.get(1))
-                            commonDialog4.dismiss()
-                        }else{
-                            ToastUtils.showToastLong("格式错误，-必须为英文状态下")
-                        }
-                    }
-                    .setNegativeButton("不改了", null)
-                    .show()
+        //条件选择器
+
+            changeBj()
+
         }
 
         //修改qq
@@ -240,6 +222,13 @@ class UserInfoFragment : BaseFragment(), IUserInfoView {
         }
     }
 
+    //得到所有班级
+    override fun getAllClass(allclass: ClassTimeTable) {
+            mallclass = allclass
+    }
+
+
+
     //弹出提示框
     override fun showDialog(msg: String) {
             val commonDialog = CommonDialog(context)
@@ -250,5 +239,40 @@ class UserInfoFragment : BaseFragment(), IUserInfoView {
                         .show()
     }
 
+    fun changeBj(){
+        var cl   = mutableListOf("包装与材料工程学院", "包装设计艺术学院",
+                "冶金与材料工程学院", "土木工程学院", "计算机学院", "电气与信息工程学院",
+                "交通工程学院" ,"生命科学与化学学院", "机械工程学院", "城市与环境学院",
+                "理学院" ,"商学院" ,"经济与贸易学院", "文学与新闻传播学院",
+                "法学院", "外国语学院", "体育学院", "音乐学院", "国际学院" ,"醴陵陶瓷学院")
 
+        try {
+            var cla = mutableListOf(mallclass.data.getList(cl.get(0)))
+            for (item in cl){
+                if (!item.equals("包装与材料工程学院")){
+                    cla.add(cl.indexOf(item),mallclass.data.getList(item))
+                }
+            }
+
+            val optionsPickerView = OptionsPickerBuilder(context,object : OnOptionsSelectListener{
+                override fun onOptionsSelect(options1: Int, options2: Int, options3: Int, v: View?) {
+                    userInfoPresenter.changeCollegeAndClass(cla[options1].get(options2))
+                    ToastUtils.showToastShort(cla[options1].get(options2))
+                }
+            }).setTitleText("选择班级")
+                    .setOptionsSelectChangeListener(object : OnOptionsSelectChangeListener{
+                        override fun onOptionsSelectChanged(options1: Int, options2: Int, options3: Int) {
+
+                        }
+                    }
+                    ).setContentTextSize(25)
+
+                    .build<String>();
+            optionsPickerView.setPicker(cl,cla)
+            optionsPickerView.show()
+        }catch (e : Exception){
+            e.printStackTrace()
+            ToastUtils.showToastShort("网络异常请重试")
+        }
+    }
 }

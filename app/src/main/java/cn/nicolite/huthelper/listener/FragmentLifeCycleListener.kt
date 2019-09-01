@@ -31,6 +31,7 @@ interface FragmentLifeCycleListener {
     fun onRestart()
 
     fun onDestroy()
+
     fun onDestroyView()
 
     fun onDetach()

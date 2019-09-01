@@ -29,6 +29,7 @@ import cn.nicolite.huthelper.base.IBaseView;
 import cn.nicolite.huthelper.model.Constants;
 import cn.nicolite.huthelper.presenter.CreateSayPresenter;
 import cn.nicolite.huthelper.utils.ListUtils;
+import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.utils.SnackbarUtils;
 import cn.nicolite.huthelper.view.adapter.ImageAdapter;
 import cn.nicolite.huthelper.view.iview.ICreateSayView;
@@ -145,7 +146,7 @@ public class CreateSayActivity extends BaseActivity<IBaseView, BaseActivity> imp
     public void selectImages() {
         try {
             Matisse.from(this)
-                    .choose(MimeType.of(MimeType.JPEG, MimeType.PNG))
+                    .choose(MimeType.of(MimeType.JPEG, MimeType.PNG,MimeType.GIF))
                     .countable(true)
                     .maxSelectable(4 - uriList.size())
                     .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
@@ -155,7 +156,6 @@ public class CreateSayActivity extends BaseActivity<IBaseView, BaseActivity> imp
         }catch (Throwable e){
             e.printStackTrace();
             e.getMessage();
-            Log.i("select_say",e.getMessage().toString());
         }
     }
 

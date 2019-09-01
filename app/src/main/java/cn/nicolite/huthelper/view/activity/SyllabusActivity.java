@@ -1,6 +1,5 @@
 package cn.nicolite.huthelper.view.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
@@ -24,16 +23,13 @@ import cn.nicolite.huthelper.R;
 import cn.nicolite.huthelper.base.BaseActivity;
 import cn.nicolite.huthelper.base.IBaseView;
 import cn.nicolite.huthelper.db.dao.LessonDao;
-import cn.nicolite.huthelper.listener.GestureListener;
 import cn.nicolite.huthelper.model.Constants;
 import cn.nicolite.huthelper.model.bean.Lesson;
 import cn.nicolite.huthelper.presenter.SyllabusPresenter;
 import cn.nicolite.huthelper.utils.DateUtils;
 import cn.nicolite.huthelper.utils.ListUtils;
-import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.utils.ScreenUtils;
 import cn.nicolite.huthelper.utils.SnackbarUtils;
-import cn.nicolite.huthelper.utils.ToastUtils;
 import cn.nicolite.huthelper.view.adapter.ChooseListAdapter;
 import cn.nicolite.huthelper.view.customView.LoadingDialog;
 import cn.nicolite.huthelper.view.fragment.SyllabusFragment;

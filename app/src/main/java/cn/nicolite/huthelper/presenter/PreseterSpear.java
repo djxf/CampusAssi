@@ -3,7 +3,9 @@ package cn.nicolite.huthelper.presenter;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.nicolite.huthelper.base.BasePresenter;
 import cn.nicolite.huthelper.db.dao.LessonDao;
@@ -13,6 +15,7 @@ import cn.nicolite.huthelper.model.bean.SyllabusResult;
 import cn.nicolite.huthelper.network.APIUtils;
 import cn.nicolite.huthelper.network.exception.ExceptionEngine;
 import cn.nicolite.huthelper.utils.ListUtils;
+import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.view.activity.SpareActivity;
 import cn.nicolite.huthelper.view.iview.ISyllabusView;
 import io.reactivex.Observer;
@@ -96,7 +99,8 @@ public class PreseterSpear extends BasePresenter<ISyllabusView, SpareActivity> {
                                         && lesson1.getRoom().equals(lesson2.getRoom())
                                         && lesson1.getTeacher().equals(lesson2.getTeacher())
                                         && !lesson1.getZs().equals(lesson2.getZs())) {
-                                    lesson1.setZs(lesson1.getZs() + "," + lesson2.getZs());
+                                    lesson1.setZs(lesson1.getZs() +  lesson2.getZs());
+                                    Log.d("TAG",lesson1.getName()+lesson1.getZs());
                                     lessonList.remove(lesson2);
                                     size = lessonList.size();
                                 }
@@ -219,7 +223,6 @@ public class PreseterSpear extends BasePresenter<ISyllabusView, SpareActivity> {
 
                                 List<Integer> zs = dataBean.getZs();
                                 StringBuilder stringBuilder = new StringBuilder();
-
                                 for (Integer in : zs) {
                                     stringBuilder.append(in).append(",");
                                 }
@@ -228,27 +231,47 @@ public class PreseterSpear extends BasePresenter<ISyllabusView, SpareActivity> {
                                 lessonList.add(lesson);
 
                             }
+
                         }
+
+//                        //测试打印课程
+//                        for (Lesson l : lessonList){
+//                            LogUtils.d("TAG",l.toString());
+//                        }
+                        
+//                        for (int i = 0; i < size; i++) {
+//                            Lesson lesson1 = lessonList.get(i);
+//                            for (int j = 0; j < size; j++) {
+//                                Lesson lesson2 = lessonList.get(j);
+//                                if (lesson1.getXqj().equals(lesson2.getXqj())
+//                                        && lesson1.getDjj().equals(lesson2.getDjj())
+//                                        && lesson1.getName().equals(lesson2.getName())
+//                                        && lesson1.getRoom().equals(lesson2.getRoom())
+//                                        && lesson1.getTeacher().equals(lesson2.getTeacher())
+//                                        && !lesson1.getZs().equals(lesson2.getZs())) {
+//                                    lesson1.setZs(lesson1.getZs() + lesson2.getZs());
+//                                    Log.d("TAG",lesson1.getName()+lesson1.getZs());
+//                                    lessonList.remove(lesson2);
+//                                    size = lessonList.size();
+//                                }
+//                            }
+//                            newLessonList.add(lesson1);
+//                        }
 
                         //合并相同时间相同的课程
                         List<Lesson> newLessonList = new ArrayList<>();
                         int size = lessonList.size();
-                        for (int i = 0; i < size; i++) {
-                            Lesson lesson1 = lessonList.get(i);
-                            for (int j = 0; j < size; j++) {
-                                Lesson lesson2 = lessonList.get(j);
-                                if (lesson1.getXqj().equals(lesson2.getXqj())
-                                        && lesson1.getDjj().equals(lesson2.getDjj())
-                                        && lesson1.getName().equals(lesson2.getName())
-                                        && lesson1.getRoom().equals(lesson2.getRoom())
-                                        && lesson1.getTeacher().equals(lesson2.getTeacher())
-                                        && !lesson1.getZs().equals(lesson2.getZs())) {
-                                    lesson1.setZs(lesson1.getZs() + "," + lesson2.getZs());
-                                    lessonList.remove(lesson2);
-                                    size = lessonList.size();
-                                }
+
+                        Map<Lesson,Lesson> map = new HashMap<>();
+                        for (Lesson ls : lessonList){
+                            if (map.containsKey(ls)){
+                                map.put(ls,Lesson.merge(ls,map.get(ls)));
+                            }else {
+                                map.put(ls,ls);
                             }
-                            newLessonList.add(lesson1);
+                        }
+                        for (Map.Entry<Lesson,Lesson> entry : map.entrySet()){
+                            newLessonList.add(entry.getValue());
                         }
 
 

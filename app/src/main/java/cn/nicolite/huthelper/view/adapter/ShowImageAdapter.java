@@ -27,6 +27,7 @@ import java.util.List;
 import cn.nicolite.huthelper.R;
 import cn.nicolite.huthelper.model.Constants;
 import cn.nicolite.huthelper.utils.ListUtils;
+import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.view.activity.ShowImageActivity;
 
 
@@ -41,7 +42,6 @@ public class ShowImageAdapter extends PagerAdapter {
     public ShowImageAdapter(Context context, List<String> images) {
         this.context = context;
         this.images = images;
-
     }
 
     @Override
@@ -69,7 +69,6 @@ public class ShowImageAdapter extends PagerAdapter {
         if (!url.startsWith("http") && !url.startsWith("https")) {
             url = Constants.PICTURE_URL + url;
         }
-
         final String finalUrl = url;
         Glide
                 .with(context)
@@ -112,6 +111,7 @@ public class ShowImageAdapter extends PagerAdapter {
                     @Override
                     public void onLoadFailed(Exception e, Drawable errorDrawable) {
                         super.onLoadFailed(e, errorDrawable);
+                        e.printStackTrace();
                         imageView.setImageDrawable(errorDrawable);
                         attacher.update();
                     }
@@ -121,6 +121,4 @@ public class ShowImageAdapter extends PagerAdapter {
         container.addView(imageView);
         return imageView;
     }
-
-
 }

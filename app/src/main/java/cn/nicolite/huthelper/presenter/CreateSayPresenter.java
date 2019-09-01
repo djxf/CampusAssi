@@ -32,7 +32,7 @@ import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.view.activity.CreateSayActivity;
 import cn.nicolite.huthelper.view.iview.ICreateSayView;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -84,7 +84,7 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
      * @param i      现在上传的是第几个
      * @param count  总共需要上传的图片个数
      */
-    public void uploadImages(Bitmap bitmap, final int count, final int i) {
+    public void uploadImages(Bitmap bitmap, final int count, final int i,String type) {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM", Locale.CHINA);
         String date = simpleDateFormat.format(new Date());
@@ -93,7 +93,7 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
         byte[] bytes = outputStream.toByteArray();
-        RequestBody requestBody = RequestBody.create(MediaType.parse("img/jpeg"), bytes);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("img/gif"), bytes);
         MultipartBody.Part file = MultipartBody.Part.createFormData("file", "01.jpg", requestBody);
 
         if (getView() != null) {
@@ -104,8 +104,8 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
                 .getUploadAPI()
                 .uploadImages(configure.getStudentKH(), configure.getAppRememberCode(), env, 0, file)
                 .compose(getActivity().<UploadImages>bindToLifecycle())
-                //.subscribeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())//单个线程上传
+                //.subscribeOn(Schedulers.io())//多个线程上传
+                .subscribeOn(Schedulers.single())//单个线程上传
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<UploadImages>() {
                     @Override
@@ -190,7 +190,8 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
                                 for (int i = 0; i < fileList.size(); i++) {
                                     Bitmap bitmap = BitmapFactory.decodeFile(fileList.get(i).getPath());
                                     //上传图片
-                                    uploadImages(bitmap, fileList.size(), i + 1);
+                                    String type = getMediaType(fileList.get(i).getPath());
+                                    uploadImages(bitmap, fileList.size(), i + 1,type);
                                     bitmap.recycle();
                                 }
                                 fileList.clear();
@@ -251,5 +252,15 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
 
                     }
                 });
+    }
+
+
+    public static String getMediaType(String path){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        String type = options.outMimeType;
+        LogUtils.d("image type -> ", type);
+       return type;
     }
 }

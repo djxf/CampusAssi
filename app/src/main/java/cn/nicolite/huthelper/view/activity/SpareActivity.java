@@ -77,7 +77,7 @@ public class SpareActivity extends BaseActivity<IBaseView, BaseActivity> impleme
     String classnamesss = "交通控制1801";
     private static ClassTimeTable classTimeTable;
     static String college;
-    String[] colleget = {"交通工程学院", "体育学院","冶金与材料工程学院","包装与材料工程学院","包装设计艺术学院", "商学院", "国际学院",   "土木工程学院", "外国语学院", "建筑与城乡规划学院", "文学与新闻传播学院", "机械工程学院",   "法学院", "理学院", "生命科学与化学学院",  "电气与信息工程学院", "经济与贸易学院", "计算机学院","醴陵陶瓷学院", "音乐学院", "马克思主义学院"};
+    String[] colleget = {"交通工程学院", "体育学院","冶金与材料工程学院","包装与材料工程学院","包装设计艺术学院", "商学院", "国际学院",   "土木工程学院", "外国语学院", "城市与环境学院", "文学与新闻传播学院", "机械工程学院",   "法学院", "理学院", "生命科学与化学学院",  "电气与信息工程学院", "经济与贸易学院", "计算机学院","醴陵陶瓷学院", "音乐学院", "马克思主义学院"};
      static List<String> classlist = new ArrayList<>();
 
     public static final String SELECT_CLASS = "select_class";
@@ -133,61 +133,73 @@ public class SpareActivity extends BaseActivity<IBaseView, BaseActivity> impleme
         }
         configure = configureList.get(0);
 
-        getCollegeClass();//提前请求回资源
+        try{
+            getCollegeClass();//提前请求回资源
+            arrayAdapterCollege = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, colleget);
+            classarrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, classlist);
+            spinner_college.setAdapter(arrayAdapterCollege);
+            spinner_class.setAdapter(classarrayAdapter);
 
-        arrayAdapterCollege = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, colleget);
-        classarrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, classlist);
-        spinner_college.setAdapter(arrayAdapterCollege);
-        spinner_class.setAdapter(classarrayAdapter);
+            SharedPreferences preferences =  getSharedPreferences(SELECT,Context.MODE_PRIVATE);
+            if (preferences !=null){
+                int collegeposition = preferences.getInt(SELECT_COLLEGE_POSITION,0);
+                spinner_college.setSelection(collegeposition);
+            }
 
-        SharedPreferences preferences =  getSharedPreferences(SELECT,Context.MODE_PRIVATE);
-        if (preferences !=null){
-            int collegeposition = preferences.getInt(SELECT_COLLEGE_POSITION,0);
-            spinner_college.setSelection(collegeposition);
+            spinner_college.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(SELECT,Context.MODE_PRIVATE).edit();
+                    editor.putInt(SELECT_COLLEGE_POSITION,position);
+                    editor.apply();
+                    college = colleget[position];
+                    if (classTimeTable != null) {
+                        classlist.clear();
+                        classlist.addAll(classTimeTable.getData().getList(college));
+                        classarrayAdapter.notifyDataSetChanged();
+                    } else {
+                        Log.i("class", "classTimeTable is null");
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+
+
+
+            spinner_class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    SharedPreferences.Editor editor_class = getApplicationContext().getSharedPreferences(SELECT_CLASS,Context.MODE_PRIVATE).edit();
+                    editor_class.putInt(SELECT_CLASS_POSITION,position);
+                    editor_class.apply();
+
+                    classnamesss = classlist.get(position);
+                    preseterSpear.showAllSyllabus(true,classnamesss);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+
+
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
-        spinner_college.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(SELECT,Context.MODE_PRIVATE).edit();
-                editor.putInt(SELECT_COLLEGE_POSITION,position);
-                editor.apply();
-                college = colleget[position];
-                if (classTimeTable != null) {
-                    classlist.clear();
-                    classlist.addAll(classTimeTable.getData().getList(college));
-                    classarrayAdapter.notifyDataSetChanged();
-                } else {
-                    Log.i("class", "classTimeTable is null");
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
 
-
-
-        spinner_class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                SharedPreferences.Editor editor_class = getApplicationContext().getSharedPreferences(SELECT_CLASS,Context.MODE_PRIVATE).edit();
-                editor_class.putInt(SELECT_CLASS_POSITION,position);
-                editor_class.apply();
-
-                classnamesss = classlist.get(position);
-                preseterSpear.showAllSyllabus(true,classnamesss);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
 
         if (ListUtils.isEmpty(getConfigureList()) || TextUtils.isEmpty(userId) || userId.equals("*")) {

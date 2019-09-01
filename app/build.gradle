@@ -287,6 +287,7 @@ dependencies {
     //图片轮播
     implementation "com.youth.banner:banner:1.4.10"
 
-
+    //班级选择器
+    implementation "com.contrarywind:Android-PickerView:4.1.8"
 
 }

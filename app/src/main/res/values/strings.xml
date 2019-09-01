@@ -7,5 +7,9 @@
     <string name="biaobai">表白</string>
     <string name="jiaoyou">交友</string>
     <string name="xiu">秀恩爱</string>
-    <string name="show_love">你可以在这里写上你想让大家知道的心里话，包括表白，秀恩爱，交友。\n 这里采用完全匿名方式，任何人包括管理员也不会知道你是谁。</string>
+    <string name="show_love"> </string>
+    <plurals name="error_over_count">
+        <item quantity="one">You can only select one media file</item>
+        <item quantity="many">超过最大选择数量！</item>
+    </plurals>
 </resources>

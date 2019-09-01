@@ -3,13 +3,11 @@ package cn.nicolite.huthelper.presenter
 import android.Manifest
 import android.graphics.Bitmap
 import cn.nicolite.huthelper.kBase.BasePresenter
-import cn.nicolite.huthelper.model.bean.Code
-import cn.nicolite.huthelper.model.bean.HttpResult
-import cn.nicolite.huthelper.model.bean.QQResult
-import cn.nicolite.huthelper.model.bean.UploadImages
+import cn.nicolite.huthelper.model.bean.*
 import cn.nicolite.huthelper.network.APIUtils
 import cn.nicolite.huthelper.network.exception.ExceptionEngine
 import cn.nicolite.huthelper.utils.EncryptUtils
+import cn.nicolite.huthelper.utils.LogUtils
 import cn.nicolite.huthelper.view.fragment.UserInfoFragment
 import cn.nicolite.huthelper.view.iview.IUserInfoView
 import com.yanzhenjie.permission.AndPermission
@@ -148,6 +146,40 @@ class UserInfoPresenter(iView: IUserInfoView, view: UserInfoFragment) : BasePres
                 })
     }
 
+    //返回班级
+    fun getAllClass(){
+
+
+        APIUtils
+                .getUserAPI()
+                .geClassSyllabus()
+                .compose(getView()?.bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Observer<ClassTimeTable> {
+                    override fun onSubscribe(d: Disposable) {
+
+                    }
+
+                    override fun onNext(classtimetable: ClassTimeTable) {
+                        if (classtimetable.code == 200) {
+                                getIView()?.getAllClass(classtimetable)
+                        } else {
+                            getIView()?.showMessage("修改失败，code： ${classtimetable.code}")
+                        }
+                    }
+
+                    override fun onError(e: Throwable) {
+                        getIView()?.showMessage(ExceptionEngine.handleException(e).msg)
+                    }
+
+                    override fun onComplete() {
+
+                    }
+                })
+    }
+
+
     //更换个人签名
     fun changeBio(bio: String) {
 
@@ -187,10 +219,10 @@ class UserInfoPresenter(iView: IUserInfoView, view: UserInfoFragment) : BasePres
     /**
      * class 关键字冲突 用_class 代替
      */
-    fun changeCollegeAndClass(college:String,_class:String){
+    fun changeCollegeAndClass(_class:String){
         APIUtils
                 .getUserAPI()
-                .changeCollegeAndClass(configure.studentKH,configureList.get(0).appRememberCode,college,_class)
+                .changeCollegeAndClass(configure.studentKH,configureList.get(0).appRememberCode,_class)
                 .compose(getView()?.bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -200,16 +232,15 @@ class UserInfoPresenter(iView: IUserInfoView, view: UserInfoFragment) : BasePres
                     }
 
                     override fun onNext(_code: Code) {
+                        LogUtils.d("TAG",_code.code.toString())
                         if (_code.code == 200) {
                             val userDao = daoSession.userDao
                             val user = configure.user
-                            user.dep_name = _code.data.college;
-                            user.class_name = _code.data.classX;
                             userDao.update(user)
                             getIView()?.showMessage("修改成功!")
                             getIView()?.showUserInfo(user)
                         } else {
-                            getView()?.showDialog("修改失败,请确保学院班级正确 如果不确定请到全校课表查询自己班级正确名字")
+                            getView()?.showDialog("修改失败,"+_code.code)
                         }
                     }
 

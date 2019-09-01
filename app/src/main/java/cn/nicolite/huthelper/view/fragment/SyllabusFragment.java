@@ -35,6 +35,7 @@ import cn.nicolite.huthelper.utils.CommUtil;
 import cn.nicolite.huthelper.utils.CustomDate;
 import cn.nicolite.huthelper.utils.DateUtils;
 import cn.nicolite.huthelper.utils.DensityUtils;
+import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.utils.ScreenUtils;
 import cn.nicolite.huthelper.view.activity.SyllabusItemActivity;
 import cn.nicolite.huthelper.view.adapter.CourseInfoAdapter;
@@ -387,13 +388,19 @@ public class SyllabusFragment extends BaseFragment {
             //获取课程
             List<Lesson> lessonList = daoSession.getLessonDao().queryBuilder()
                     .where(LessonDao.Properties.UserId.eq(userId)).list();
+            for (Lesson ls : lessonList){
+                LogUtils.d("TAG",ls.toString());
+            }
+
+
+
             Lesson upperCourse = null;
             int currentWeek = mTable.get().CurrWeek;
             int lastListSize;
             //七种颜色的背景
             int[] background = {R.drawable.kb_item1, R.drawable.kb_item2, R.drawable.kb_item3, R.drawable.kb_item4};
 
-
+            //循环至课程末尾
             do {
                 lastListSize = lessonList.size();
                 Iterator<Lesson> it = lessonList.iterator();
@@ -402,35 +409,37 @@ public class SyllabusFragment extends BaseFragment {
                     if (true) {
                         //判断开始周数是否小于当前周数，结束周数是否大于当前周数
                         //判断单双周
-                        upperCourse = le;//设置为顶层课
+                        upperCourse = le;//设置为顶层课 最后那个课
                         it.remove();
                         break;
                     }
                 }
 
                 if (upperCourse != null) {
-                    List<Lesson> lList = new ArrayList<>();
+                    List<Lesson> lList = new ArrayList<>();//记录顶层课？？？
                     lList.add(upperCourse);
-                    int index = -1;
+                    int index = -1; //课程无 -1 课程有 0
                     if (CommUtil.ifHaveCourse(upperCourse, mTable.get().CurrWeek)) {
                         index = 0;
                     }
                     it = lessonList.iterator();
-                    //查找是否有重叠的课
+                    //查找是否有重叠的课 指星期几第几节相同的课
                     while (it.hasNext()) {
                         Lesson lesson = it.next();
+
                         if (lesson.getDjj().equals(upperCourse.getDjj()) && lesson.getXqj().equals(upperCourse.getXqj())) {
-                            boolean change = false;
+                            boolean change = false;//记录是否移除了课程
                             for (int i = 0; i < lList.size(); i++) {
-                                if (lList.get(i).getName().equals(lesson.getName())) {
-                                    if (CommUtil.ifHaveCourse(lesson, mTable.get().CurrWeek)) {
+                                if (lList.get(i).getName().equals(lesson.getName()) && lList.get(i).getRoom().equals(lesson.getRoom())) {
+                                    if (CommUtil.ifHaveCourse(lesson, mTable.get().CurrWeek)){
                                         upperCourse = lesson;
                                         index = i;
                                     }
                                     change = true;
-                                    it.remove();
+                                    it.remove();//在满足名称相同第几节星期几相同的情况下移除了一个课程。事实上不是这样的
                                 }
                             }
+                            //djxf:改为ture 原来为：!change
                             if (!change) {
                                 lList.add(lesson);
                                 it.remove();
@@ -445,8 +454,11 @@ public class SyllabusFragment extends BaseFragment {
                     final int upperCourseIndex = index;
                     TextView lesson = new TextView(mTable.get().context);
                     lesson.setId(10 * Integer.parseInt(upperCourse.getXqj()) + Integer.parseInt(upperCourse.getDjj()));
+                    //添加重叠在一起的课？？
                     mTable.get().textviewLessonSparseArray.put(lesson.getId(), lList);
                     lesson.setText(String.valueOf(upperCourse.getName() + "@" + upperCourse.getRoom()));
+
+
                     RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(mTable.get().aveWidth - 6, mTable.get().gridHeight * 2 - 10);
                     //距离上一个课程高度
                     rlp.topMargin = ((Integer.parseInt(upperCourse.getDjj()) + 1) / 2 - 1) * mTable.get().gridHeight * 2 + 3;
@@ -524,7 +536,6 @@ public class SyllabusFragment extends BaseFragment {
                     upperCourse = null;
                 }
             } while (lessonList.size() < lastListSize && lessonList.size() != 0);
-
         }
     }
 
