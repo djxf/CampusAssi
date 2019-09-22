@@ -287,16 +287,9 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
         unReadMessage.setVisibility(View.GONE); //首页铃铛
 
         String userId = getLoginUser();
-//        if (TextUtils.isEmpty(userId)) {
-//            startActivity(LoginActivity.class);
-//            finish();
-//        }
 
         List<Configure> configureList = getConfigureList();
-//        if (ListUtils.isEmpty(configureList)) {
-//            startActivity(LoginActivity.class);
-//            finish();
-//        }
+
 
         configure = configureList.get(0);
         if (configure.getUser() == null || TextUtils.isEmpty(userId) ||ListUtils.isEmpty(configureList) ){
@@ -390,24 +383,6 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
         bannerSet();
 
         //TODO 私信功能暂时隐藏
-//        qBadgeView = new QBadgeView(context);
-//        qBadgeView.bindTarget(unReadMessage);
-//        qBadgeView.setBadgeGravity(Gravity.END | Gravity.TOP);
-//        qBadgeView.setOnDragStateChangedListener(new Badge.OnDragStateChangedListener() {
-//            @Override
-//            public void onDragStateChanged(int dragState, Badge badge, View targetView) {
-//
-//            }
-//        });
-//
-//        qBadgeView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                qBadgeView.hide(false);
-//                mainPresenter.startChat();
-//            }
-//        });
-
 
         //上传帐号信息到腾讯MTA
         StatConfig.setCustomUserId(context, configure.getStudentKH());

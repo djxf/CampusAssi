@@ -256,7 +256,7 @@ class UserInfoFragment : BaseFragment(), IUserInfoView {
 
             val optionsPickerView = OptionsPickerBuilder(context,object : OnOptionsSelectListener{
                 override fun onOptionsSelect(options1: Int, options2: Int, options3: Int, v: View?) {
-                    userInfoPresenter.changeCollegeAndClass(cla[options1].get(options2))
+                    userInfoPresenter.changeCollegeAndClass(cla[options1].get(options2),cl[options1])
                     ToastUtils.showToastShort(cla[options1].get(options2))
                 }
             }).setTitleText("选择班级")

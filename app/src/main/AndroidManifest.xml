@@ -50,6 +50,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        android:windowSoftInputMode="stateHidden|adjustResize"
         tools:replace="android:allowBackup">
         <activity
             android:name=".view.activity.SplashActivity"
@@ -139,6 +141,7 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -298,6 +301,7 @@
         <activity android:name=".view.activity.emptyRoomActivity" />
         <activity android:name=".view.activity.EmptyRoomActivity" />
         <activity android:name=".view.activity.CreateLoveActivity" />
+        <activity android:name=".view.activity.X5WebViewActivity"></activity>
     </application>
 
 </manifest>

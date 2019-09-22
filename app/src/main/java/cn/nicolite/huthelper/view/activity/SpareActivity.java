@@ -99,13 +99,19 @@ public class SpareActivity extends BaseActivity<IBaseView, BaseActivity> impleme
                 return;
             }
             classTimeTable = (ClassTimeTable)msg.obj;
-            if (classTimeTable != null) {
-                classlist.clear();
-                classlist.addAll(classTimeTable.getData().getList(college));
-                classarrayAdapter.notifyDataSetChanged();
-            } else {
-                Log.i("class", "classTimeTable is null");
+            try {
+                if (classTimeTable != null) {
+                    classlist.clear();
+                    classlist.addAll(classTimeTable.getData().getList(college));
+                    classarrayAdapter.notifyDataSetChanged();
+                } else {
+                     ToastUtils.showToastLong("发生异常 请重试！");
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                ToastUtils.showToastLong("发生异常 请重试！");
             }
+
         }
     }
 
@@ -141,10 +147,13 @@ public class SpareActivity extends BaseActivity<IBaseView, BaseActivity> impleme
             spinner_class.setAdapter(classarrayAdapter);
 
             SharedPreferences preferences =  getSharedPreferences(SELECT,Context.MODE_PRIVATE);
-            if (preferences !=null){
-                int collegeposition = preferences.getInt(SELECT_COLLEGE_POSITION,0);
-                spinner_college.setSelection(collegeposition);
-            }
+            int collegeposition = preferences.getInt(SELECT_COLLEGE_POSITION,0);
+            spinner_college.setSelection(collegeposition);
+
+            SharedPreferences preferences2 =  getSharedPreferences(colleget[collegeposition],Context.MODE_PRIVATE);
+            int classposition = preferences2.getInt(SELECT_CLASS_POSITION,0);
+            spinner_class.setSelection(classposition);
+
 
             spinner_college.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -153,13 +162,19 @@ public class SpareActivity extends BaseActivity<IBaseView, BaseActivity> impleme
                     editor.putInt(SELECT_COLLEGE_POSITION,position);
                     editor.apply();
                     college = colleget[position];
-                    if (classTimeTable != null) {
-                        classlist.clear();
-                        classlist.addAll(classTimeTable.getData().getList(college));
-                        classarrayAdapter.notifyDataSetChanged();
-                    } else {
-                        Log.i("class", "classTimeTable is null");
+
+                    try{
+                        if (classTimeTable != null) {
+                            classlist.clear();
+                            classlist.addAll(classTimeTable.getData().getList(college));
+                            classarrayAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.i("class", "classTimeTable is null");
+                        }
+                    }catch (Exception e){
+                        ToastUtils.showToastLong("发生异常请重试");
                     }
+
                 }
 
                 @Override
@@ -174,8 +189,11 @@ public class SpareActivity extends BaseActivity<IBaseView, BaseActivity> impleme
             spinner_class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    SharedPreferences preferences =  getSharedPreferences(SELECT,Context.MODE_PRIVATE);
+                    int lastCollege = preferences.getInt(SELECT_COLLEGE_POSITION,0);
 
-                    SharedPreferences.Editor editor_class = getApplicationContext().getSharedPreferences(SELECT_CLASS,Context.MODE_PRIVATE).edit();
+
+                    SharedPreferences.Editor editor_class = getApplicationContext().getSharedPreferences(colleget[lastCollege],Context.MODE_PRIVATE).edit();
                     editor_class.putInt(SELECT_CLASS_POSITION,position);
                     editor_class.apply();
 

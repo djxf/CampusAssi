@@ -22,6 +22,7 @@ import cn.nicolite.huthelper.model.bean.User;
 import cn.nicolite.huthelper.presenter.SearchPresenter;
 import cn.nicolite.huthelper.presenter.UserInfoCardPresenter;
 import cn.nicolite.huthelper.utils.ListUtils;
+import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.utils.ToastUtils;
 import cn.nicolite.huthelper.view.iview.IUserInfoCardView;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
@@ -76,8 +77,8 @@ public class UserInfoCardActivity extends BaseActivity<IBaseView, BaseActivity> 
     @Override
     protected void doBusiness() {
 
-        //TODO 私信功能暂时隐藏
-        startChat.setVisibility(View.GONE);
+        //TODO 私信功能开放
+        startChat.setVisibility(View.VISIBLE);
 
         toolbarTitle.setText(username);
         tvUserName.setText(username);
@@ -93,9 +94,12 @@ public class UserInfoCardActivity extends BaseActivity<IBaseView, BaseActivity> 
                 finish();
                 break;
             case R.id.bt_user_chat:
+                String url = String.format(Constants.IMURL,getConfigureList().get(0).getUserId(),getConfigureList().get(0).getAppRememberCode(),mUserId);
                Bundle cBundle = new Bundle();
-               cBundle.putString("username",username);
-               startActivity(ChatActivity.class,cBundle);
+               cBundle.putString("url",url);
+               cBundle.putInt("type",888);
+               cBundle.putString("title","私信");
+               startActivity(WebViewActivity.class,cBundle);
                 break;
             case R.id.iv_user_shiwu:
                 Bundle sBundle = new Bundle();

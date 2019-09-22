@@ -3,6 +3,7 @@ package cn.nicolite.huthelper.presenter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.List;
 
@@ -106,6 +107,7 @@ public class LoginPresenter extends BasePresenter<ILoginView, LoginActivity> {
                         if (getView() != null) {
                             getView().closeLoading();
                             getView().showMessage("登录失败，" + ExceptionEngine.handleException(e).getMsg());
+                            Log.i("TAG",e.getMessage().toString()+e.getStackTrace());
                         }
                     }
 

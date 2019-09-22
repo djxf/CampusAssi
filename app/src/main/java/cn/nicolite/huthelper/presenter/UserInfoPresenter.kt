@@ -25,7 +25,7 @@ import java.util.*
 
 /**
  * UserInfoPresenter
- * Created by nicolite on 17-10-28.
+ * Created by djxf on 17-10-28.
  */
 
 class UserInfoPresenter(iView: IUserInfoView, view: UserInfoFragment) : BasePresenter<IUserInfoView, UserInfoFragment>(iView, view) {
@@ -185,7 +185,7 @@ class UserInfoPresenter(iView: IUserInfoView, view: UserInfoFragment) : BasePres
 
         APIUtils
                 .getUserAPI()
-                .changeBio(configure.studentKH, configure.appRememberCode, bio)
+                .changeBio(configure.studentKH, configure.appRememberCode,bio)
                 .compose(getView()?.bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -219,7 +219,7 @@ class UserInfoPresenter(iView: IUserInfoView, view: UserInfoFragment) : BasePres
     /**
      * class 关键字冲突 用_class 代替
      */
-    fun changeCollegeAndClass(_class:String){
+    fun changeCollegeAndClass(_class:String,college : String){
         APIUtils
                 .getUserAPI()
                 .changeCollegeAndClass(configure.studentKH,configureList.get(0).appRememberCode,_class)
@@ -236,6 +236,8 @@ class UserInfoPresenter(iView: IUserInfoView, view: UserInfoFragment) : BasePres
                         if (_code.code == 200) {
                             val userDao = daoSession.userDao
                             val user = configure.user
+                            user.class_name=_class
+                            user.dep_name=college
                             userDao.update(user)
                             getIView()?.showMessage("修改成功!")
                             getIView()?.showUserInfo(user)
