@@ -100,9 +100,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:orientation="vertical"
-            android:paddingEnd="10dp"
-            android:paddingStart="10dp">
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
 
             <TextView
                 android:id="@+id/tv_course_maincontent"
@@ -119,11 +121,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="150dp"
                 android:text="12周 星期1"
-                android:visibility="gone"
                 android:textColor="@color/white"
                 android:textSize="12sp"
+                android:visibility="gone"
 
-                 />
+                />
         </LinearLayout>
 
 

@@ -300,10 +300,6 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
     protected void doBusiness() {
 
 
-        //TODO 私信功能暂时隐藏
-        sixin.setVisibility(View.GONE); //侧栏私信菜单
-        unReadMessage.setVisibility(View.GONE); //首页铃铛
-
         String userId = getLoginUser();
 
         List<Configure> configureList = getConfigureList();
