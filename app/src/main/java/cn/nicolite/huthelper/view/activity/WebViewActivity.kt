@@ -99,12 +99,13 @@ class WebViewActivity : BaseActivity() {
 
         settings.apply {
             loadWithOverviewMode = true
+            //WebView.setWebContentsDebuggingEnabled(true);//开启调试模式发布要关了。
             builtInZoomControls = true// 使页面支持缩放
             setSupportZoom(true) //支持缩放
             displayZoomControls = false// 缩放按钮
             loadsImagesAutomatically = true//支持自动加载图片
             domStorageEnabled = true //开启DOM
-            cacheMode = WebSettings.LOAD_NO_CACHE//关闭webview中缓存
+            cacheMode = WebSettings.LOAD_DEFAULT//缓存默认
             setAppCacheEnabled(true)
             layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
             defaultTextEncodingName = "UTF-8"
@@ -182,14 +183,15 @@ class WebViewActivity : BaseActivity() {
 
 
     private fun addImgClickListener() {
-        webView?.loadUrl("""javascript:(function(){
-                var objs = document.getElementsByTagName("img");
-                for(var i=0;i<objs.length;i++){
-                      objs[i].onclick=function(){
-                      window.imageListener.showImage(this.src);
-                     }
-                   }
-                })()""")
+//        webView?.loadUrl("""javascript:(function(){
+//                var objs = document.getElementsByTagName("img");
+//                for(var i=0;i<objs.length;i++){
+//                      objs[i].onclick=function(){
+//                      window.imageListener.showImage(this.src);
+//                     }
+//                   }
+//                })()""")
+        //暂停图片点击
     }
 
     private fun changThemeMusicDom() {

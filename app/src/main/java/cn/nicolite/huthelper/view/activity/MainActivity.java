@@ -196,8 +196,9 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
 
                 if (slidePic.getData().getIm_msg_count() > im_count){
                     im_msg_bt.setImageDrawable(getResources().getDrawable(R.drawable.new_img));
+                }else {
+                    im_msg_bt.setImageDrawable(getResources().getDrawable(R.drawable.bell));
                 }
-
 
                 //存储消息计数器
                 SharedPreferences.Editor editor = getSharedPreferences("im_count",MODE_PRIVATE).edit();
@@ -412,9 +413,6 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
 
     }
 
-
-
-
     //主界面监听器
     class MainReceiver extends BroadcastReceiver {
         @Override
@@ -493,6 +491,7 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
                 cBundle.putString("url",url);
                 cBundle.putInt("type",888);
                 cBundle.putString("title","私信");
+                im_msg_bt.setImageDrawable(getResources().getDrawable(R.drawable.bell));
                 startActivity(WebViewActivity.class,cBundle);
                 break;
             case R.id.tv_tongzhi_title:

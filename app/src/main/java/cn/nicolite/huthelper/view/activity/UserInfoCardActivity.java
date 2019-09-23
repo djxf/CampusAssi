@@ -94,6 +94,10 @@ public class UserInfoCardActivity extends BaseActivity<IBaseView, BaseActivity> 
                 finish();
                 break;
             case R.id.bt_user_chat:
+                if (getConfigureList().get(0).getUserId().equals(mUserId)){
+                    ToastUtils.showToastLong("不能给自己发消息");
+                    return;
+                }
                 String url = String.format(Constants.IMURL,getConfigureList().get(0).getUserId(),getConfigureList().get(0).getAppRememberCode(),mUserId);
                Bundle cBundle = new Bundle();
                cBundle.putString("url",url);
