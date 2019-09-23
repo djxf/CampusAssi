@@ -9,7 +9,6 @@ import cn.nicolite.huthelper.view.activity.MainActivity
 import com.squareup.leakcanary.LeakCanary
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.beta.Beta
-import com.tencent.smtt.sdk.QbSdk
 import com.tencent.stat.StatConfig
 import com.tencent.stat.StatCrashReporter
 import com.tencent.stat.StatService
@@ -40,8 +39,7 @@ class MApplication : Application() {
         Bugly.init(this, Constants.BUGLY_APPID, false)
         Bugly.setIsDevelopmentDevice(this, false)
 
-        //初始化x5内核
-        QbSdk.initX5Environment(this,null)
+
     }
 
     override fun attachBaseContext(base: Context?) {

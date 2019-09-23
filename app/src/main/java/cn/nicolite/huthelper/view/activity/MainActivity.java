@@ -128,6 +128,8 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
     ImageView adSeting;
     @BindView(R.id.banner)
     Banner banner;
+    @BindView(R.id.imgbtn_bell)
+    ImageView im_msg_bt;
     private MainPresenter mainPresenter;
     private long exitTime = 0;
     private List<Menu> menuList = new ArrayList<>();
@@ -189,6 +191,22 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
                     dateLineView2.setVisibility(View.GONE);//黑色
                     dateLineView.setVisibility(View.VISIBLE);
                 }
+                SharedPreferences sp = getSharedPreferences("im_count",MODE_PRIVATE);
+                int im_count = sp.getInt("im_count",0);
+
+                if (slidePic.getData().getIm_msg_count() > im_count){
+                    im_msg_bt.setImageDrawable(getResources().getDrawable(R.drawable.new_img));
+                }
+
+
+                //存储消息计数器
+                SharedPreferences.Editor editor = getSharedPreferences("im_count",MODE_PRIVATE).edit();
+                editor.putInt("im_count",slidePic.getData().getIm_msg_count());
+                editor.apply();
+
+
+
+
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -382,7 +400,7 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
         mainPresenter.startLoginService();
         bannerSet();
 
-        //TODO 私信功能暂时隐藏
+
 
         //上传帐号信息到腾讯MTA
         StatConfig.setCustomUserId(context, configure.getStudentKH());
@@ -474,7 +492,12 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
                 rootView.open();
                 break;
             case R.id.imgbtn_bell:
-                mainPresenter.startChat();
+                String url = String.format(Constants.IMLIST,getConfigureList().get(0).getUserId(),getConfigureList().get(0).getAppRememberCode());
+                Bundle cBundle = new Bundle();
+                cBundle.putString("url",url);
+                cBundle.putInt("type",888);
+                cBundle.putString("title","私信");
+                startActivity(WebViewActivity.class,cBundle);
                 break;
             case R.id.tv_tongzhi_title:
             case R.id.tv_tongzhi_contont:
@@ -486,6 +509,7 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
                 break;
             case R.id.tv_notice_maincontent:
                 startActivity(NoticeActivity.class);
+                break;
             case R.id.imgbt_adsetting:
                 //广告处理
                 handleAds();

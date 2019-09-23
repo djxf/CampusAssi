@@ -60,7 +60,7 @@
                 android:paddingBottom="8dp"
                 android:paddingTop="10dp"
                 android:src="@drawable/bell"
-                android:visibility="gone" />
+                />
         </FrameLayout>
 
         <LinearLayout

@@ -33,7 +33,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 27
         versionCode gitVersionCode()
-        versionName '1.4.971'//每次发布加1
+        versionName '1.4.972'//每次发布加1
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
@@ -290,7 +290,7 @@ dependencies {
     //班级选择器
     implementation "com.contrarywind:Android-PickerView:4.1.8"
 
-    //tencent X5
-    implementation "com.tencent.tbs.tbssdk:sdk:43697"
+    //tencent X5 坑多已抛弃
+
 
 }
