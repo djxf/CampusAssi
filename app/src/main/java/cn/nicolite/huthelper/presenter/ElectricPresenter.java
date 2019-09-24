@@ -129,7 +129,7 @@ public class ElectricPresenter extends BasePresenter<IElectricView, ElectricActi
                                     getView().showElectric(electric);
                                 }
                             } else {
-                                getView().showMessage("获取电费数据失败！ " + electric.getCode());
+                                getView().showMessage(electric.getMsg()+ electric.getCode());
                             }
                         }
 

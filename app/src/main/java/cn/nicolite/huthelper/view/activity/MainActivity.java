@@ -191,7 +191,7 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
                     dateLineView2.setVisibility(View.GONE);//黑色
                     dateLineView.setVisibility(View.VISIBLE);
                 }
-                SharedPreferences sp = getSharedPreferences("im_count",MODE_PRIVATE);
+                SharedPreferences sp = getSharedPreferences(getConfigureList().get(0).getUserId()+"im_count",MODE_PRIVATE);
                 int im_count = sp.getInt("im_count",0);
 
                 if (slidePic.getData().getIm_msg_count() > im_count){
@@ -201,12 +201,9 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
                 }
 
                 //存储消息计数器
-                SharedPreferences.Editor editor = getSharedPreferences("im_count",MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor = getSharedPreferences(getConfigureList().get(0).getUserId()+"im_count",MODE_PRIVATE).edit();
                 editor.putInt("im_count",slidePic.getData().getIm_msg_count());
                 editor.apply();
-
-
-
 
             }catch (Exception e){
                 e.printStackTrace();
