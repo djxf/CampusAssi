@@ -3,6 +3,7 @@ package cn.nicolite.huthelper.view.activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import cn.nicolite.huthelper.base.IBaseView;
 import cn.nicolite.huthelper.model.bean.Electric;
 import cn.nicolite.huthelper.presenter.ElectricPresenter;
 import cn.nicolite.huthelper.utils.KeyBoardUtils;
+import cn.nicolite.huthelper.utils.SnackbarUtils;
 import cn.nicolite.huthelper.utils.ToastUtils;
 import cn.nicolite.huthelper.view.iview.IElectricView;
 import cn.nicolite.huthelper.view.customView.ElectricDialog;
@@ -26,6 +28,8 @@ import cn.nicolite.huthelper.view.customView.ElectricDialog;
 
 public class ElectricActivity extends BaseActivity<IBaseView, BaseActivity> implements IElectricView {
 
+    @BindView(R.id.rootView)
+    LinearLayout rootView;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.tv_wd_temp)
@@ -102,7 +106,7 @@ public class ElectricActivity extends BaseActivity<IBaseView, BaseActivity> impl
 
     @Override
     public void showMessage(String msg) {
-       // SnackbarUtils.showShortSnackbar(rootView, msg);
+       SnackbarUtils.showShortSnackbar(rootView, msg);
     }
 
     @Override
