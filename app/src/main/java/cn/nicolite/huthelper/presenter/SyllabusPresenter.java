@@ -87,33 +87,16 @@ public class SyllabusPresenter extends BasePresenter<ISyllabusView, SyllabusActi
                                 lessonList.add(lesson);
 
                             }
+                        }else {
+                             if (getView() != null){
+                                 getView().showMessage(syllabusResult.getMsg()+",错误码："+syllabusResult.getCode());
+                             }
                         }
 
                         //合并相同时间相同的课程
                         //在时间，课程名称相同时地点可以不同。但属于同一课程。
                         List<Lesson> newLessonList = new ArrayList<>();
                         int size = lessonList.size();
-//                        for (int i = 0; i < size; i++) {
-//                            Lesson lesson1 = lessonList.get(i);
-//                            for (int j = 0; j < size; j++) {
-//                                Lesson lesson2 = lessonList.get(j);
-//                                if (lesson1.getXqj().equals(lesson2.getXqj())
-//                                        && lesson1.getDjj().equals(lesson2.getDjj())
-//                                        && lesson1.getName().equals(lesson2.getName())
-//                                        && lesson1.getRoom().equals(lesson2.getRoom())
-//                                        && lesson1.getTeacher().equals(lesson2.getTeacher())
-//                                        && !lesson1.getZs().equals(lesson2.getZs())) {
-//
-//
-//                                    lesson1.setZs(lesson1.getZs() + lesson2.getZs());
-//                                    Log.d("TAG",lesson1.getName()+lesson1.getZs());
-//                                    lessonList.remove(lesson2);
-//                                    size = lessonList.size();
-//                                }
-//                            }
-//                            newLessonList.add(lesson1);
-//                        }
-
                         Map<Lesson,Lesson> map = new HashMap<>();
                         for (Lesson ls : lessonList){
                             if (map.containsKey(ls)){
@@ -125,7 +108,6 @@ public class SyllabusPresenter extends BasePresenter<ISyllabusView, SyllabusActi
                         for (Map.Entry<Lesson,Lesson> entry : map.entrySet()){
                             newLessonList.add(entry.getValue());
                         }
-
 
                         //写入数据库
                         LessonDao lessonDao = daoSession.getLessonDao();

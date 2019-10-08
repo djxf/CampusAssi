@@ -474,58 +474,58 @@ public class SpareFragment extends BaseFragment {
                             SparseArray<List<Lesson>> map = mTable.get().textviewLessonSparseArray;
                             final List<Lesson> tempList = map.get(v.getId());
 
-//                            if (!ListUtils.isEmpty(tempList)){
-//                                Lesson lesson1 = tempList.get(0);
-//                                final CommonDialog commonDialog = new CommonDialog(context);
-//                                commonDialog
-//                                        .setMessage(lesson1.getName()+"\n"+lesson1.getTeacher()+"\n"+lesson1.getRoom())
-//                                        .setPositiveButton("想去", new View.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(View v) {
-//                                                commonDialog.dismiss();
-//                                            }
-//                                        })
-//                                        .setNegativeButton("不想去", null)
-//                                        .show();
-//                            }
-
-                            if (tempList.size() > 1) {
-                                //如果有多个课程，则设置点击弹出gallery 3d 对话框
-                                LayoutInflater layoutInflater = (LayoutInflater) mTable.get().context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                                View galleryView = layoutInflater.inflate(R.layout.gallery_3d_lesson, null);
-                                final AlertDialog coursePopupDialog = new AlertDialog.Builder(mTable.get().context, R.style.CustomDialog).create();
-                                coursePopupDialog.setCanceledOnTouchOutside(true);
-                                coursePopupDialog.setCancelable(true);
-
-                                coursePopupDialog.show();
-                                WindowManager.LayoutParams params = coursePopupDialog.getWindow().getAttributes();
-                                params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-
-                                coursePopupDialog.getWindow().setAttributes(params);
-                                CourseInfoAdapter adapter = new CourseInfoAdapter(mTable.get().context, tempList, ScreenUtils.getScreenWidth(mTable.get().context), mTable.get().CurrWeek);
-                                CourseInfoGallery gallery = (CourseInfoGallery) galleryView.findViewById(R.id.lesson_gallery);
-                                gallery.setSpacing(10);
-                                gallery.setAdapter(adapter);
-                                gallery.setSelection(upperCourseIndex);
-                                gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                                        coursePopupDialog.dismiss();
-                                        Bundle mBundle = new Bundle();
-                                        mBundle.putLong("lessonId", tempList.get(arg2).getId());
-                                        mBundle.putInt("type", SyllabusItemActivity.SHOW_COURSE);
-                                        startActivityForResult(SyllabusItemActivity.class, mBundle, Constants.REQUEST);
-                                    }
-                                });
-
-                                coursePopupDialog.setContentView(galleryView);
-                            } else {
-                                Bundle mBundle = new Bundle();
-                                mBundle.putInt("type", SyllabusItemActivity.SHOW_COURSE);
-                                mBundle.putLong("lessonId", tempList.get(0).getId());
-                                startActivityForResult(SyllabusItemActivity.class, mBundle, Constants.REQUEST);
+                            if (!ListUtils.isEmpty(tempList)){
+                                Lesson lesson1 = tempList.get(0);
+                                final CommonDialog commonDialog = new CommonDialog(context);
+                                commonDialog
+                                        .setMessage(lesson1.getName()+"\n"+lesson1.getTeacher()+"\n"+lesson1.getRoom())
+                                        .setPositiveButton("想去", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                commonDialog.dismiss();
+                                            }
+                                        })
+                                        .setNegativeButton("不想去", null)
+                                        .show();
                             }
-                        }
+
+//                            if (tempList.size() > 1) {
+//                                //如果有多个课程，则设置点击弹出gallery 3d 对话框
+//                                LayoutInflater layoutInflater = (LayoutInflater) mTable.get().context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                                View galleryView = layoutInflater.inflate(R.layout.gallery_3d_lesson, null);
+//                                final AlertDialog coursePopupDialog = new AlertDialog.Builder(mTable.get().context, R.style.CustomDialog).create();
+//                                coursePopupDialog.setCanceledOnTouchOutside(true);
+//                                coursePopupDialog.setCancelable(true);
+//
+//                                coursePopupDialog.show();
+//                                WindowManager.LayoutParams params = coursePopupDialog.getWindow().getAttributes();
+//                                params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//
+//                                coursePopupDialog.getWindow().setAttributes(params);
+//                                CourseInfoAdapter adapter = new CourseInfoAdapter(mTable.get().context, tempList, ScreenUtils.getScreenWidth(mTable.get().context), mTable.get().CurrWeek);
+//                                CourseInfoGallery gallery = (CourseInfoGallery) galleryView.findViewById(R.id.lesson_gallery);
+//                                gallery.setSpacing(10);
+//                                gallery.setAdapter(adapter);
+//                                gallery.setSelection(upperCourseIndex);
+//                                gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                                    @Override
+//                                    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+//                                        coursePopupDialog.dismiss();
+//                                        Bundle mBundle = new Bundle();
+//                                        mBundle.putLong("lessonId", tempList.get(arg2).getId());
+//                                        mBundle.putInt("type", SyllabusItemActivity.SHOW_COURSE);
+//                                        startActivityForResult(SyllabusItemActivity.class, mBundle, Constants.REQUEST);
+//                                    }
+//                                });
+//
+//                                coursePopupDialog.setContentView(galleryView);
+//                            } else {
+//                                Bundle mBundle = new Bundle();
+//                                mBundle.putInt("type", SyllabusItemActivity.SHOW_COURSE);
+//                                mBundle.putLong("lessonId", tempList.get(0).getId());
+//                                startActivityForResult(SyllabusItemActivity.class, mBundle, Constants.REQUEST);
+//                            }
+                      }
                     });
                     //添加布局
                     if (mTable.get().mUserCourseLayout != null) {

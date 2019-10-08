@@ -208,10 +208,16 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
             }catch (Exception e){
                 e.printStackTrace();
             }
+            //展示广告
             showAds(images_url);
         }
     }
 
+    /**
+     * 展示广告方法
+     *
+     * @param list
+     */
     public void showAds(List list){
         //防止空指针异常
         if (banner != null){

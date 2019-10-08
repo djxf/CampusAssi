@@ -288,9 +288,7 @@ public class SyllabusItemActivity extends BaseActivity<IBaseView, BaseActivity> 
     private void editCourseData() {
         etCourseName.setText(lesson.getName());
         tvCourseWeek.setText(weeklists[Integer.parseInt(lesson.getXqj()) - 1]);
-        // tvCourseWeek.setCompoundDrawables(null, null, null, null);
         tvCourseNum.setText(coursenumlists[(Integer.parseInt(lesson.getDjj()) + 1) / 2 - 1]);
-        //tvCourseNum.setCompoundDrawables(null, null, null, null);
         etCourseTeacher.setText(lesson.getTeacher());
         etCourseClassroom.setText(lesson.getRoom());
     }

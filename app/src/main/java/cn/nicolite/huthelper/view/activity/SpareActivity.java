@@ -149,10 +149,10 @@ public class SpareActivity extends BaseActivity<IBaseView, BaseActivity> impleme
             SharedPreferences preferences =  getSharedPreferences(SELECT,Context.MODE_PRIVATE);
             int collegeposition = preferences.getInt(SELECT_COLLEGE_POSITION,0);
             spinner_college.setSelection(collegeposition);
-
-            SharedPreferences preferences2 =  getSharedPreferences(colleget[collegeposition],Context.MODE_PRIVATE);
-            int classposition = preferences2.getInt(SELECT_CLASS_POSITION,0);
-            spinner_class.setSelection(classposition);
+//
+//            SharedPreferences preferences2 =  getSharedPreferences(colleget[collegeposition],Context.MODE_PRIVATE);
+//            int classposition = preferences2.getInt(SELECT_CLASS_POSITION,0);
+//            spinner_class.setSelection(classposition);
 
 
             spinner_college.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -207,17 +207,9 @@ public class SpareActivity extends BaseActivity<IBaseView, BaseActivity> impleme
                 }
             });
 
-
-
-
-
-
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
-
 
 
         if (ListUtils.isEmpty(getConfigureList()) || TextUtils.isEmpty(userId) || userId.equals("*")) {
@@ -430,7 +422,6 @@ public class SpareActivity extends BaseActivity<IBaseView, BaseActivity> impleme
         }catch (Exception e){
             e.printStackTrace();
         }
-        return;
     }
 
 }

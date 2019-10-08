@@ -79,7 +79,6 @@ public class UserInfoCardActivity extends BaseActivity<IBaseView, BaseActivity> 
 
         //TODO 私信功能开放
         startChat.setVisibility(View.VISIBLE);
-
         toolbarTitle.setText(username);
         tvUserName.setText(username);
         userInfoCardPresenter = new UserInfoCardPresenter(this, this);
