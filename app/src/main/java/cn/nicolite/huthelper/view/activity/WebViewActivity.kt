@@ -60,6 +60,11 @@ class WebViewActivity : BaseActivity() {
         const val TYPE_S_CALENDAR = 990
         const val TYPE_MAP = 8888
         const val TYPE_JXBM = 777
+
+        //新增
+        const val TYPE_EMPTY_CLASSROOM = 1000
+        const val TYPE_GRADE = 1001
+        const val TYPE_EXAM = 102
     }
 
     override fun initConfig(savedInstanceState: Bundle?) {
@@ -76,6 +81,7 @@ class WebViewActivity : BaseActivity() {
             title = bundle.getString("title", "")
             if (type == -1 || TextUtils.isEmpty(url) || TextUtils.isEmpty(title)) {
                 ToastUtils.showToastShort("获取数据失败！")
+                LogUtils.d("test",""+type+url+title)
                 finish()
             }
         }
@@ -105,6 +111,7 @@ class WebViewActivity : BaseActivity() {
             displayZoomControls = false// 缩放按钮
             loadsImagesAutomatically = true//支持自动加载图片
             domStorageEnabled = true //开启DOM
+            allowFileAccessFromFileURLs = true
             cacheMode = WebSettings.LOAD_DEFAULT//缓存默认
             setAppCacheEnabled(true)
             layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
@@ -112,6 +119,7 @@ class WebViewActivity : BaseActivity() {
             useWideViewPort = true  //将图片调整到适合webview的大小
             setNeedInitialFocus(true) ////当webview调用requestFocus时为webview设置节点
             allowFileAccess = true// 允许访问文件
+
             pluginState = WebSettings.PluginState.ON
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -213,6 +221,9 @@ class WebViewActivity : BaseActivity() {
 
     private fun loadHtml(type: Int, title: String, url: String) {
         LogUtils.d(TAG, "webView $url")
+
+
+
         when (type) {
             TYPE_CHANGE_PWD -> {
                 toolbar_title.text = title
@@ -263,6 +274,18 @@ class WebViewActivity : BaseActivity() {
                 webView.loadUrl(url)
             }
             TYPE_JXBM -> {
+                toolbar_title.text = title
+                webView.loadUrl(url)
+            }
+            TYPE_EMPTY_CLASSROOM -> {
+                toolbar_title.text = title
+                webView.loadUrl(url)
+            }
+            TYPE_GRADE -> {
+                toolbar_title.text = title
+                webView.loadUrl(url)
+            }
+            TYPE_EXAM -> {
                 toolbar_title.text = title
                 webView.loadUrl(url)
             }
@@ -354,6 +377,7 @@ class WebViewActivity : BaseActivity() {
     private fun loadContent(url: String) {
         Observable.create(ObservableOnSubscribe<String> { e ->
             val document = Jsoup.connect(url)
+                    .header("Access-Control-Allow-Origin","*")//允许访问任何url
                     .userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)Chrome/50.0.2661.102 Safari/537.36")
                     .get()
             val head = document.head()

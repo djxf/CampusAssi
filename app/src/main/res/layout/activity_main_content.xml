@@ -33,7 +33,7 @@
         <ImageView
             android:id="@+id/imgbt_adsetting"
             android:layout_width="31dp"
-            android:visibility="visible"
+            android:visibility="invisible"
             android:layout_height="40dp"
             android:layout_alignTop="@+id/imgbtn_menusetting"
             android:layout_alignParentRight="true"

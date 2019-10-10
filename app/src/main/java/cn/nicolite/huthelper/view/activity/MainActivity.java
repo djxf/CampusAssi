@@ -369,7 +369,15 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
                             bundle.putString("url",SCHOOL_MAPURL);
                         }else if (menu.getType() == WebViewActivity.TYPE_JXBM){
                             bundle.putString("url",Constants.JXBM);
+                        }else if (menu.getType() == WebViewActivity.TYPE_GRADE){
+                            bundle.putString("url",Constants.WEB_GRADE);
+                        }else if (menu.getType() == WebViewActivity.TYPE_EMPTY_CLASSROOM){
+                            bundle.putString("url",Constants.WEB_EMPTY_CLASS);
+                        } if (menu.getType() == WebViewActivity.TYPE_EXAM){
+                            bundle.putString("url",Constants.WEB_EXAM);
                         }
+
+
                         if (menu.getType() == WebViewActivity.TYPE_JXBM){
                             bundle.putString("title", "[广告]"+menu.getTitle());
                         }else {
@@ -380,7 +388,6 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
                         startActivityForResult(Class.forName(menu.getPath().trim()), bundle, Constants.REQUEST);
                     } catch (ClassNotFoundException e) {
                         showMessage("找不到该页面！");
-                        e.printStackTrace();
                     }
                 } else {
                     showMessage("你点的太快了！");

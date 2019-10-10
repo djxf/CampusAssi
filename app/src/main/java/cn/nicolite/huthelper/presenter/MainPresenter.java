@@ -217,7 +217,7 @@ public class MainPresenter extends BasePresenter<IMainView, MainActivity> {
                 .where(MenuDao.Properties.UserId.eq(userId))
                 .list();
 
-        int newVersionCode = 37; //TODO 需要更新menu时，将这个数值加1
+        int newVersionCode = 45; //TODO 需要更新menu时，将这个数值加1
 
         SharedPreferences updateMainMenu = MApplication.appContext.getSharedPreferences("update_main_menu", Context.MODE_PRIVATE);
         int oldVersionCode = updateMainMenu.getInt("versionCode", -1);
@@ -228,9 +228,9 @@ public class MainPresenter extends BasePresenter<IMainView, MainActivity> {
             menuItems.add(item);
             item = new Menu(1, 1, 0, "课程表", "cn.nicolite.huthelper.view.activity.SyllabusActivity", true);
             menuItems.add(item);
-            item = new Menu(2, 2, 0, "考试计划", "cn.nicolite.huthelper.view.activity.ExamActivity", true);
+            item = new Menu(2, 2, WebViewActivity.TYPE_EXAM, "考试计划", "cn.nicolite.huthelper.view.activity.WebViewActivity", true);
             menuItems.add(item);
-            item = new Menu(3, 3, 0, "成绩查询", "cn.nicolite.huthelper.view.activity.GradeRankActivity", false);
+            item = new Menu(3, 3, WebViewActivity.TYPE_GRADE, "成绩查询", "cn.nicolite.huthelper.view.activity.WebViewActivity", false);
             menuItems.add(item);
             item = new Menu(4, 18, 0, "全校课程", "cn.nicolite.huthelper.view.activity.SpareActivity", false);
             menuItems.add(item);
@@ -248,17 +248,16 @@ public class MainPresenter extends BasePresenter<IMainView, MainActivity> {
             menuItems.add(item);
             item = new Menu(12, 16, WebViewActivity.TYPE_MAP, "平面图", "cn.nicolite.huthelper.view.activity.WebViewActivity", true);
             menuItems.add(item);
-//            item = new Menu(14, 14, ContainerActivity.TYPE_FRESHMAN_GUIDE, "新生攻略", "cn.nicolite.huthelper.view.activity.ContainerActivity", false);
-//            menuItems.add(item);
             item = new Menu(15, 4, WebViewActivity.TYPE_HOMEWORK, "网上作业", "cn.nicolite.huthelper.view.activity.WebViewActivity", false);
             menuItems.add(item);
             item = new Menu(16, 11, 0, "宣讲会", "cn.nicolite.huthelper.view.activity.CareerTalkActivity", false);
             menuItems.add(item);
-//            item = new Menu(17, 11, 0, "表白墙", "cn.nicolite.huthelper.view.activity.CreateLoveActivity", false);
-//            menuItems.add(item);
+            item = new Menu(17, 19, WebViewActivity.TYPE_EMPTY_CLASSROOM, "空教室", "cn.nicolite.huthelper.view.activity.WebViewActivity", false);
+            menuItems.add(item);
             item = new Menu(18, 8, 0, "实验课表", "cn.nicolite.huthelper.view.activity.ExpLessonActivity", true);
             menuItems.add(item);
 
+            //全部放于最后一个
             item = new Menu(19, 12, 0, "全部", "cn.nicolite.huthelper.view.activity.AllActivity", true);
             menuItems.add(item);
 

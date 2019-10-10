@@ -143,7 +143,16 @@ public class AllActivity extends BaseActivity<IBaseView, BaseActivity> {
                             bundle.putString("url",Constants.S_CALENDAR);
                         }else if (menu.getType() == WebViewActivity.TYPE_MAP){
                             bundle.putString("url",Constants.S_MAP);
+                        }else if (menu.getType() == WebViewActivity.TYPE_GRADE){
+                            bundle.putString("url",Constants.WEB_GRADE);
+                        }else if (menu.getType() == WebViewActivity.TYPE_EMPTY_CLASSROOM){
+                            bundle.putString("url",Constants.WEB_EMPTY_CLASS);
+                        } if (menu.getType() == WebViewActivity.TYPE_EXAM){
+                            bundle.putString("url",Constants.WEB_EXAM);
                         }
+
+
+
                         if (menu.getType() == WebViewActivity.TYPE_JXBM){
                             bundle.putString("title", "[广告]"+menu.getTitle());
                         }else {
@@ -189,7 +198,16 @@ public class AllActivity extends BaseActivity<IBaseView, BaseActivity> {
                             bundle.putString("url",Constants.JXBM);
                         }else if (menu.getType() == WebViewActivity.TYPE_S_CALENDAR){
                             bundle.putString("url",Constants.S_CALENDAR);
+                        }else if (menu.getType() == WebViewActivity.TYPE_GRADE){
+                            bundle.putString("url",Constants.WEB_GRADE);
+                        }else if (menu.getType() == WebViewActivity.TYPE_EMPTY_CLASSROOM){
+                            bundle.putString("url",Constants.WEB_EMPTY_CLASS);
+                        } if (menu.getType() == WebViewActivity.TYPE_EXAM){
+                            bundle.putString("url",Constants.WEB_EXAM);
                         }
+
+
+
                         if (menu.getType() == WebViewActivity.TYPE_JXBM){
                             bundle.putString("title", "[广告]"+menu.getTitle());
                         }else {

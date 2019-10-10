@@ -149,11 +149,6 @@ public class SpareActivity extends BaseActivity<IBaseView, BaseActivity> impleme
             SharedPreferences preferences =  getSharedPreferences(SELECT,Context.MODE_PRIVATE);
             int collegeposition = preferences.getInt(SELECT_COLLEGE_POSITION,0);
             spinner_college.setSelection(collegeposition);
-//
-//            SharedPreferences preferences2 =  getSharedPreferences(colleget[collegeposition],Context.MODE_PRIVATE);
-//            int classposition = preferences2.getInt(SELECT_CLASS_POSITION,0);
-//            spinner_class.setSelection(classposition);
-
 
             spinner_college.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -189,16 +184,14 @@ public class SpareActivity extends BaseActivity<IBaseView, BaseActivity> impleme
             spinner_class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    SharedPreferences preferences =  getSharedPreferences(SELECT,Context.MODE_PRIVATE);
-                    int lastCollege = preferences.getInt(SELECT_COLLEGE_POSITION,0);
 
-
-                    SharedPreferences.Editor editor_class = getApplicationContext().getSharedPreferences(colleget[lastCollege],Context.MODE_PRIVATE).edit();
-                    editor_class.putInt(SELECT_CLASS_POSITION,position);
+                    SharedPreferences.Editor editor_class = getApplicationContext().getSharedPreferences("class",Context.MODE_PRIVATE).edit();
+                    editor_class.putString(SELECT_CLASS_POSITION,classlist.get(position));
                     editor_class.apply();
 
-                    classnamesss = classlist.get(position);
-                    preseterSpear.showAllSyllabus(true,classnamesss);
+                    SharedPreferences class_preferences = getSharedPreferences("class",MODE_PRIVATE);
+
+                    preseterSpear.showAllSyllabus(true,class_preferences.getString(SELECT_CLASS_POSITION,"网络工程1701"));
                 }
 
                 @Override
