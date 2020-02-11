@@ -7,18 +7,23 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cn.nicolite.huthelper.base.BasePresenter;
 import cn.nicolite.huthelper.model.bean.HttpResult;
@@ -31,6 +36,8 @@ import cn.nicolite.huthelper.utils.ListUtils;
 import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.view.activity.CreateSayActivity;
 import cn.nicolite.huthelper.view.iview.ICreateSayView;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -80,32 +87,31 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
     private AtomicInteger uploadCount = new AtomicInteger(0);
 
     /**
-     * @param bitmap
-     * @param i      现在上传的是第几个
+     *  上传图片
+     *
+     * @param bytes   上传的字节数组
+     * @param i       现在上传的是第几个
      * @param count  总共需要上传的图片个数
+     * @param type   上传图片的格式 .jpg或者.gif
      */
-    public void uploadImages(Bitmap bitmap, final int count, final int i,String type) {
+    private void uploadImages(byte[] bytes, final int count, final int i,final String type) {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM", Locale.CHINA);
-        String date = simpleDateFormat.format(new Date());
+        final String date = simpleDateFormat.format(new Date());
         String env = EncryptUtils.SHA1(configure.getStudentKH() + configure.getAppRememberCode() + date);
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-        byte[] bytes = outputStream.toByteArray();
-        RequestBody requestBody = RequestBody.create(MediaType.parse("img/gif"), bytes);
-        MultipartBody.Part file = MultipartBody.Part.createFormData("file", "01.jpg", requestBody);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/gif"), bytes);
+        MultipartBody.Part file = MultipartBody.Part.createFormData("file", "01."+type, requestBody);
 
-        if (getView() != null) {
-            getView().uploadProgress(String.valueOf("正在上传图片"));
-        }
+//        if (getView() != null) {
+//            getView().uploadProgress("正在上传图片:"+uploadCount+"/"+count);
+//        }
 
         APIUtils.INSTANCE
                 .getUploadAPI()
                 .uploadImages(configure.getStudentKH(), configure.getAppRememberCode(), env, 0, file)
                 .compose(getActivity().<UploadImages>bindToLifecycle())
-                //.subscribeOn(Schedulers.io())//多个线程上传
-                .subscribeOn(Schedulers.single())//单个线程上传
+                .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<UploadImages>() {
                     @Override
@@ -118,8 +124,17 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
                         if (getView() != null) {
                             if (uploadImages.getCode() == 200) {
                                 uploadCount.incrementAndGet();
+
+                                if (getView() != null) {
+                                    getView().uploadProgress("正在上传图片:"+uploadCount+"/"+count);
+                                }
+
                                 stringBuilder.append("//");
-                                stringBuilder.append(uploadImages.getData());
+                                if (!type.equals(".gif")){
+                                    stringBuilder.append(uploadImages.getData());
+                                }else {
+                                    stringBuilder.append(uploadImages.getData_original());
+                                }
                                 if (getView() != null && uploadCount.get() == count) {
                                     String string = stringBuilder.toString();
                                     stringBuilder.delete(0, stringBuilder.length());
@@ -133,7 +148,7 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
                             } else {
                                 stringBuilder.delete(0, stringBuilder.length());
                                 uploadCount.set(0);
-                                getView().uploadFailure(String.valueOf("上传图片失败！"));
+                                getView().uploadFailure("上传图片失败！");
                             }
                         }
                     }
@@ -155,8 +170,14 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
                 });
     }
 
-    List<File> fileList = new ArrayList<>();
 
+    List<File> fileList = new ArrayList<>();
+    /**
+     *
+     * 创建说说
+     * @param activity
+     * @param uriList
+     */
     public void createSay(Activity activity, final List<Uri> uriList){
         if (ListUtils.isEmpty(uriList)) {
             if (getView() != null) {
@@ -164,16 +185,13 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
             }
             return;
         }
-
         if (getView() != null) {
             getView().showMessage("正在发布，请勿关闭页面！");
         }
-
         for (int i = 0; i < uriList.size(); i++) {
             if (getView() != null) {
-                getView().uploadProgress(String.valueOf("正在压缩图片！"));
+                getView().uploadProgress("正在压缩图片！");
             }
-
             Luban
                     .with(activity)
                     .load(CommUtil.uri2File(activity, uriList.get(i)))
@@ -188,11 +206,23 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
                             fileList.add(file);
                             if (!ListUtils.isEmpty(fileList) && fileList.size() == uriList.size()) {
                                 for (int i = 0; i < fileList.size(); i++) {
-                                    Bitmap bitmap = BitmapFactory.decodeFile(fileList.get(i).getPath());
-                                    //上传图片
-                                    String type = getMediaType(fileList.get(i).getPath());
-                                    uploadImages(bitmap, fileList.size(), i + 1,type);
-                                    bitmap.recycle();
+                                    byte[] bytes;
+                                    String reg = "(.JPEG|.jpeg|.JPG|.jpg|.png|.PNG|.gif)";
+                                    Matcher matcher = Pattern.compile(reg).matcher(fileList.get(i).getName());
+                                    String type = ".jpg";
+                                    if (matcher.find()){
+                                        type = matcher.group(0);
+                                    }
+                                    if (!fileList.get(i).getName().endsWith("gif")){
+                                        Bitmap bitmap = BitmapFactory.decodeFile(fileList.get(i).getPath());
+                                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                                        bytes = outputStream.toByteArray();
+                                        bitmap.recycle();
+                                    }else {
+                                        bytes = File2byte(fileList.get(i));
+                                    }
+                                    uploadImages(bytes,fileList.size(), i + 1,type);
                                 }
                                 fileList.clear();
                             }
@@ -254,13 +284,47 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
                 });
     }
 
-
+    /**
+     * 获取媒体类型
+     *
+     * @param path
+     * @return
+     */
     public static String getMediaType(String path){
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
         String type = options.outMimeType;
-        LogUtils.d("image type -> ", type);
        return type;
+    }
+
+    /**
+     * 将文件转换成二进制流 过于耗时 应该放在子线程中操作
+     *
+     * @param file
+     * @return
+     */
+
+    public static byte[] File2byte(File file){
+        byte[] buff = null;
+        long fileLength = file.length();
+        String threadName = Thread.currentThread().getName();
+        long time1 = System.currentTimeMillis();
+        try{
+            FileInputStream fis = new FileInputStream(file);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] b = new byte[1024];
+            int n;
+            while ((n = fis.read(b)) != -1){
+                bos.write(b,0,n);
+            }
+            fis.close();
+            bos.close();
+            buff = bos.toByteArray();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        LogUtils.d("TAG",threadName+":time:"+(System.currentTimeMillis()-time1)+"fileLength:"+fileLength);
+            return buff;
     }
 }
