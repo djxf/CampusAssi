@@ -22,8 +22,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by nicolite on 17-11-14.
- * Change by djxf on 2019
+ *
+ * Change by djxf on 2020年1月20日
  */
 
 public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
@@ -75,6 +75,11 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
         }
     }
 
+    /**
+     * 删除说说
+     * @param position
+     * @param sayId
+     */
     public void deleteSay(final int position, final String sayId) {
 
         if (getView() != null) {
@@ -115,6 +120,12 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                 });
     }
 
+    /**
+     * 删除评论
+     * @param sayPosition
+     * @param commentId
+     * @param commentPosition
+     */
     public void deleteComment(final int sayPosition, final String commentId, final int commentPosition) {
         APIUtils
                 .INSTANCE
@@ -191,6 +202,48 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
     }
 
     /**
+     *
+     * 不喜欢该说说
+     * @param sayId
+     */
+    public void disLikeSay(final String sayId,final int position){
+        APIUtils.INSTANCE
+                .getSayAPI()
+                .disLikeSay(configure.getStudentKH(), configure.getAppRememberCode(), sayId)
+                .compose(getActivity().<HttpResult<String>>bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<HttpResult<String>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(HttpResult<String> stringHttpResult) {
+                        if (getView() != null) {
+                            getView().deleteSaySuccess(position, sayId);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (getView() != null) {
+                            getView().closeLoading();
+                            getView().showMessage(ExceptionEngine.handleException(e).getMsg());
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
+
+    /**
      * 添加评论
      * @param comment
      * @param sayId
@@ -255,7 +308,8 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
      */
     public void loadSayList(final int page, final boolean isManual, final boolean isLoadMore) {
 
-        loadLikedSay(configure.getStudentKH(), configure.getAppRememberCode(), new Observer<HttpResult<List<String>>>() {
+        loadLikedSay(configure.getStudentKH(), configure.getAppRememberCode(),
+                new Observer<HttpResult<List<String>>>() {
             @Override
             public void onSubscribe(Disposable d) {
                 if (getView() != null && !isManual) {
@@ -302,6 +356,7 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
 
     /**
      *
+     * 加载说说列表
      * @param page
      * @param isLoadMore
      */
@@ -309,7 +364,7 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
 
         APIUtils.INSTANCE
                 .getSayAPI()
-                .getSayList(page)
+                .getSayList(configure.getUser().getStudentKH(),page)
                 .compose(getActivity().<HttpPageResult<List<Say>>>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -372,7 +427,7 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
 
     /**
      *
-     *
+     *获取自己点赞的说说
      * @param studentKh
      * @param appCode
      * @param observer
@@ -383,39 +438,9 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                 .getLikedSay(studentKh, appCode)
                 .compose(getActivity().<HttpResult<List<String>>>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())//下游回调线程
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
-
-    public void loadLikedSay() {
-
-        loadLikedSay(configure.getStudentKH(), configure.getAppRememberCode(), new Observer<HttpResult<List<String>>>() {
-
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(HttpResult<List<String>> listHttpResult) {
-                if (listHttpResult.getMsg().equals("成功获得点赞数据")) {
-                    SayLikedCache.setLikedList(listHttpResult.getData());
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-
-    }
-
 
     /**
      *
@@ -619,12 +644,13 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
 
                     @Override
                     public void onNext(HttpPageResult<List<Say>> listHttpPageResult) {
+
                         if (getView() != null) {
                             getView().closeLoading();
                             if (listHttpPageResult.getCode() == 200) {
                                 if (isLoadMore) {
                                     //刷新后会从第一页开始重新加载 如果此时pageination==1 会重复添加数据
-                                    if (page <= listHttpPageResult.getPageination() && listHttpPageResult.getPageination()!=1) {
+                                    if (page <=listHttpPageResult.getPageination()) {
                                         getView().loadMore(listHttpPageResult.getData());
                                     } else {
                                         getView().noMoreData();

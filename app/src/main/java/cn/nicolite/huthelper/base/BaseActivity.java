@@ -86,7 +86,7 @@ public abstract class BaseActivity<I extends IBaseView, A extends BaseActivity> 
     }
 
     /**
-     * 获取当前登录用户
+     * 获取当前登录用户ID
      */
     protected String getLoginUser() {
         return DaoUtils.getLoginUser();

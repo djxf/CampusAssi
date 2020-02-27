@@ -1,11 +1,16 @@
 package cn.nicolite.huthelper.view.fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.inputmethodservice.Keyboard;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.text.Editable;
@@ -16,13 +21,17 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.jdsjlzx.interfaces.OnLoadMoreListener;
 import com.github.jdsjlzx.interfaces.OnNetWorkErrorListener;
@@ -33,6 +42,7 @@ import com.github.jdsjlzx.recyclerview.LRecyclerViewAdapter;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 import butterknife.BindView;
@@ -43,11 +53,14 @@ import cn.nicolite.huthelper.model.bean.Say;
 import cn.nicolite.huthelper.presenter.SayPresenter;
 import cn.nicolite.huthelper.utils.ButtonUtils;
 import cn.nicolite.huthelper.utils.CommUtil;
+import cn.nicolite.huthelper.utils.DensityUtils;
 import cn.nicolite.huthelper.utils.KeyBoardUtils;
 
 import cn.nicolite.huthelper.utils.LogUtils;
+import cn.nicolite.huthelper.utils.ScreenUtils;
 import cn.nicolite.huthelper.utils.SnackbarUtils;
 import cn.nicolite.huthelper.utils.ToastUtils;
+import cn.nicolite.huthelper.view.activity.FeedBackActivity;
 import cn.nicolite.huthelper.view.activity.SayActivity;
 import cn.nicolite.huthelper.view.activity.ShowImageActivity;
 import cn.nicolite.huthelper.view.activity.UserInfoCardActivity;
@@ -199,7 +212,15 @@ public class SayFragment extends BaseFragment implements ISayView {
                         .setNegativeButton("取消", null)
                         .show();
             }
+
+            //兼容有问题
+            @Override
+            public void onArrowDownClick(ImageView imageView,String sayId,int position) {
+                //点击向下箭头 弹框提示
+                showSaySetMenu(imageView,sayId,position);
+            }
         });
+
 
         lRecyclerView.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -315,7 +336,6 @@ public class SayFragment extends BaseFragment implements ISayView {
         sayList.clear();
         sayList.addAll(list);
         lRecyclerView.refreshComplete(list.size());
-
     }
 
     @Override
@@ -377,8 +397,69 @@ public class SayFragment extends BaseFragment implements ISayView {
     private PopupWindow addCommitWindow;
     private EditText editText;
     private Button button;
+    private PopupWindow saySetWindow;
 
+    //展示说说设置菜单
+    private void showSaySetMenu(ImageView imageView, final String sayId, final int position){
+        try{
+            View saySetPopupWindow = LayoutInflater.from(context).inflate(R.layout.popup_say_set_choose,rootView,false);
+            saySetWindow = new PopupWindow(saySetPopupWindow, ScreenUtils.getScreenWidth(context), ScreenUtils.getScreenHeight(context)/2-100);
 
+            TextView tv_dislike = saySetPopupWindow.findViewById(R.id.tv_dislike_say);
+            TextView tv_hide_user_say = saySetPopupWindow.findViewById(R.id.tv_hide_user_say);
+            TextView tv_report = saySetPopupWindow.findViewById(R.id.tv_report);
+            //不喜欢该说说
+            tv_dislike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sayPresenter.disLikeSay(sayId,position+1);
+                    saySetWindow.dismiss();
+                }
+            });
+            //隐藏此人动态
+            tv_hide_user_say.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    saySetWindow.dismiss();
+
+                }
+            });
+            //举报
+            tv_report.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    saySetWindow.dismiss();
+                    Intent intent = new Intent(context, FeedBackActivity.class);
+                    intent.putExtra("title","举报");
+                    intent.putExtra("content","说说id:"+sayId+"\n"+"说说内容:"+sayList.get(position).getContent());
+                    startActivity(intent);
+                }
+            });
+
+            saySetWindow.setFocusable(true);
+            saySetWindow.setOutsideTouchable(true);
+            //对低等级 API 不进行背景设置
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                rootView.setForeground(getResources().getDrawable(R.color.bg_black_shadow));
+            }else {
+                ToastUtils.showToast(context,"此设备API较低 可能会出现无法预料的情况。",Toast.LENGTH_LONG);
+            }
+            saySetWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        rootView.setForeground(getResources().getDrawable(R.color.transparent));
+                    }else {
+                        ToastUtils.showToast(context,"此设备API较低 可能会出现无法预料的情况。",Toast.LENGTH_LONG);
+                    }
+                }
+            });
+            saySetWindow.showAsDropDown(imageView,0,20);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     //展示评论框
     private void showCommitView(final int position, final String sayId,final String username) {

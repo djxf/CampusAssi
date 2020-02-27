@@ -2,8 +2,12 @@ package cn.nicolite.huthelper.view.activity
 
 import android.os.Bundle
 import android.support.v4.view.ViewPager
+import android.util.Log
 import cn.nicolite.huthelper.R
 import cn.nicolite.huthelper.kBase.BaseActivity
+import cn.nicolite.huthelper.network.glide.impl.ProgressListener
+import cn.nicolite.huthelper.network.glide.impl.ProgressListenerImpl
+import cn.nicolite.huthelper.network.glide.intercepter.ProgressInterceptor
 import cn.nicolite.huthelper.utils.ButtonUtils
 import cn.nicolite.huthelper.utils.CommUtil
 import cn.nicolite.huthelper.utils.SnackbarUtils

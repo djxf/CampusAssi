@@ -8,7 +8,7 @@ apply plugin: 'kotlin-kapt'
 
 static def gitVersionCode() {
     def cmd = 'git rev-list HEAD --count'
-    def gitVersionCode = 22827 + cmd.execute().text.trim().toInteger()
+    def gitVersionCode = 22833 + cmd.execute().text.trim().toInteger()
     return gitVersionCode
 }
 
@@ -21,7 +21,7 @@ static def gitVersionTag() {
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '29.0.2'
 
     repositories {
         flatDir {
@@ -33,7 +33,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 27
         versionCode gitVersionCode()
-        versionName '1.4.972'//每次发布加1
+        versionName '1.5.0'//每次发布加1
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
@@ -211,7 +211,7 @@ dependencies {
     implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
     implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
 
-    //Glide--图片加载
+    //Glide--图片加载 & 使用OKHTTP替换通讯器
     implementation 'com.github.bumptech.glide:glide:3.8.0'
     implementation 'com.github.bumptech.glide:okhttp3-integration:1.5.0'
     implementation 'jp.wasabeef:glide-transformations:2.0.2'
@@ -290,7 +290,6 @@ dependencies {
     //班级选择器
     implementation "com.contrarywind:Android-PickerView:4.1.8"
 
-    //tencent X5 坑多已抛弃
-
+    //Tencent X5 坑多已抛弃
 
 }

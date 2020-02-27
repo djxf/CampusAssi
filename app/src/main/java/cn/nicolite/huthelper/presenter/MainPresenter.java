@@ -217,7 +217,7 @@ public class MainPresenter extends BasePresenter<IMainView, MainActivity> {
                 .where(MenuDao.Properties.UserId.eq(userId))
                 .list();
 
-        int newVersionCode = 45; //TODO 需要更新menu时，将这个数值加1
+        int newVersionCode = 46; //TODO 需要更新menu时，将这个数值加1
 
         SharedPreferences updateMainMenu = MApplication.appContext.getSharedPreferences("update_main_menu", Context.MODE_PRIVATE);
         int oldVersionCode = updateMainMenu.getInt("versionCode", -1);
@@ -239,8 +239,6 @@ public class MainPresenter extends BasePresenter<IMainView, MainActivity> {
             item = new Menu(6, 6, 0, "校园说说", "cn.nicolite.huthelper.view.activity.SayActivity", true);
             menuItems.add(item);
             item = new Menu(7, 7, 0, "电费查询", "cn.nicolite.huthelper.view.activity.ElectricActivity", true);
-            menuItems.add(item);
-            item = new Menu(9, 20, WebViewActivity.TYPE_JXBM, "驾校报名", "cn.nicolite.huthelper.view.activity.WebViewActivity", true);
             menuItems.add(item);
             item = new Menu(10, 10, 0, "失物招领", "cn.nicolite.huthelper.view.activity.LostAndFoundActivity", true);
             menuItems.add(item);
@@ -378,6 +376,9 @@ public class MainPresenter extends BasePresenter<IMainView, MainActivity> {
                 .show();
     }
 
+    /**
+     * 检查相关权限
+     */
     public void checkPermission() {
         String[] permissions = new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,

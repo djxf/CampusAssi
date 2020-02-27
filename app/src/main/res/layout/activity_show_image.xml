@@ -7,7 +7,7 @@
     android:background="@color/black"
     android:fitsSystemWindows="true">
 
-    <android.support.v4.view.ViewPager
+    <cn.nicolite.huthelper.view.adapter.MyViewPage
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,4 +68,22 @@
             </FrameLayout>
         </android.support.design.widget.AppBarLayout>
     </LinearLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_progress"
+            android:textColor="@color/white"
+            android:text="100/%"
+            android:textSize="30sp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+
 </FrameLayout>

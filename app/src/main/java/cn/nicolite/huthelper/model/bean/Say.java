@@ -40,6 +40,7 @@ public class Say {
     private String view_cnt;
     private String username;
     private String dep_name;
+    private String type;
     private String head_pic;
     private String head_pic_thumb;
     private boolean isLike;
@@ -61,6 +62,10 @@ public class Say {
     public void setId(String id) {
         this.id = id;
     }
+
+    public String getType() { return type; }
+
+    public void setType(String type) { this.type = type; }
 
     public String getUser_id() {
         return user_id;

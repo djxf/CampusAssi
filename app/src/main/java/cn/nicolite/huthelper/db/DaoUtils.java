@@ -32,7 +32,7 @@ public class DaoUtils {
     }
 
     /**
-     * 获取当前登录用户
+     * 获取当前登录用户ID
      */
     public static String getLoginUser() {
         SharedPreferences preferences = MApplication.application.getSharedPreferences("login_user", Context.MODE_PRIVATE);

@@ -19,6 +19,8 @@ public class SlidePic {
 
         //静态内部类
         public static class Informatin {
+
+            private List<String> moment_types;
             private String school_opens;
             private String calendar_url;
             private String map_url;
@@ -51,6 +53,14 @@ public class SlidePic {
 
             public void setBanner_pics(List<BannerPic> banner_pics) {
                 this.banner_pics = banner_pics;
+            }
+
+            public List<String> getMoment_types() {
+                return moment_types;
+            }
+
+            public void setMoment_types(List<String> moment_types) {
+                this.moment_types = moment_types;
             }
 
             public static class BannerPic{

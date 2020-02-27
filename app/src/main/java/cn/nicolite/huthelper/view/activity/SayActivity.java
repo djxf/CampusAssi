@@ -6,8 +6,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -27,6 +30,7 @@ import cn.nicolite.huthelper.model.bean.User;
 import cn.nicolite.huthelper.presenter.SearchPresenter;
 import cn.nicolite.huthelper.utils.DensityUtils;
 import cn.nicolite.huthelper.utils.ListUtils;
+import cn.nicolite.huthelper.utils.ScreenUtils;
 import cn.nicolite.huthelper.utils.ToastUtils;
 import cn.nicolite.huthelper.view.fragment.SayFragment;
 
@@ -52,6 +56,8 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
 
     @Override
     protected void initConfig(Bundle savedInstanceState) {
+        //禁止截屏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         setImmersiveStatusBar(true);
         setDeepColorStatusBar(true);
         setSlideExit(true);
@@ -69,6 +75,7 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
 
     @Override
     protected void doBusiness() {
+
         toolbarTitle.setText("段子");
         transaction = getSupportFragmentManager().beginTransaction();
         fragment = SayFragment.newInstance(SayFragment.ALLSAY, null);
@@ -117,6 +124,7 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
     }
 
     protected PopupWindow menuListWindow;
+
 
     private void showMenuWindow(View parent) {
         if (menuListWindow == null) {
@@ -214,6 +222,7 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
         menuListWindow.setBackgroundDrawable(new BitmapDrawable());
         menuListWindow.showAsDropDown(parent, -DensityUtils.dp2px(SayActivity.this, 115), 20);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

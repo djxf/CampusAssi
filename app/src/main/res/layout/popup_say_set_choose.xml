@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dp_10"
+            android:src="@drawable/ic_cha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tv_dislike_say"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_gravity="center"
+            android:text="隐藏此条动态"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+    <View
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:background="@color/light_grey"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dp_10"
+            android:src="@drawable/ic_hide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tv_hide_user_say"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_gravity="center"
+            android:text="不看他(她)的动态"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+    <View
+        android:layout_marginTop="10dp"
+        android:background="@color/light_grey"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dp_10"
+            android:src="@drawable/ic_jb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tv_report"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_gravity="center"
+            android:text="举报"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+    <View
+        android:layout_marginTop="10dp"
+        android:background="@color/light_grey"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
+
+
+</LinearLayout>

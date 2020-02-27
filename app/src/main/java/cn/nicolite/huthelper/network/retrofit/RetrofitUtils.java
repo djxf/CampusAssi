@@ -53,7 +53,8 @@ public class RetrofitUtils {
                 LogUtils.d(TAG ,"okHttp：" + message);
             }
         });
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        //打印请求日志  Level等级参数
+        logging.setLevel(HttpLoggingInterceptor.Level.NONE);
 
         return new OkHttpClient.Builder()
                 .connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)

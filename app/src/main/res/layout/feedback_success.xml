@@ -13,11 +13,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
-        android:text="留言成功"
+        android:text="提交成功"
         android:textColor="@color/colorPrimary"
         android:textSize="27sp" />
 
     <TextView
+        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -41,6 +42,7 @@
         android:textSize="12sp" />
 
     <Button
+        android:visibility="invisible"
         android:id="@+id/btn_feedbk_again"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"

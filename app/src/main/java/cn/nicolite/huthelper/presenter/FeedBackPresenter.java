@@ -18,7 +18,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
 /**
- * Created by nicolite on 17-10-24.
+ * Created by djxf on 20-01-19.
  */
 
 public class FeedBackPresenter extends BasePresenter<IFeedBackView, FeedBackActivity> {
@@ -35,14 +35,11 @@ public class FeedBackPresenter extends BasePresenter<IFeedBackView, FeedBackActi
             if (getView() != null) {
                 getView().showMessage("反馈意见不能为空！");
             }
-        } else if (contact.length() > 200) {
+        } else if (contact.length() > 2000) {
             if (getView() != null) {
                 getView().showMessage("字数超过限制！");
             }
-        } else if (TextUtils.isEmpty(contact)) {
-            if (getView() != null) {
-                getView().showMessage("联系方式不能为空！");
-            }
+
         } else {
             String version = "版本：Android " + BuildConfig.VERSION_NAME + "（" + BuildConfig.VERSION_CODE + "）";
             String model = "机型：" + Build.MANUFACTURER + Build.MODEL + "（Android " + Build.VERSION.RELEASE + "）";

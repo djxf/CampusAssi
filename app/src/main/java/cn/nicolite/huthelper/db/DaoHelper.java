@@ -19,7 +19,6 @@ public class DaoHelper {
     private DaoSession daoSession;
 
     private DaoHelper(Context context) {
-        //helper = new DaoMaster.DevOpenHelper(context, Constants.DBNAME);
         helper = new DaoUpgradeHelper(context, Constants.DBNAME);
         db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);

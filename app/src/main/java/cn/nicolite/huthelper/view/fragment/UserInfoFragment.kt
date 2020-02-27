@@ -193,21 +193,29 @@ class UserInfoFragment : BaseFragment(), IUserInfoView {
         if (requestCode == Constants.REQUEST && resultCode == RESULT_OK) {
             val uriList = Matisse.obtainResult(data)
             if (!ListUtils.isEmpty(uriList)) {
-                //图片裁剪
+
                 val uri = uriList[0]
-                val cacheUri = Uri.fromFile(File(activity.cacheDir, "crop.jpg"))
-                val options = UCrop.Options()
-                options.setStatusBarColor(Color.parseColor("#1dcbdb"))
-                options.setToolbarColor(Color.parseColor("#1dcbdb"))
-                options.setCompressionFormat(Bitmap.CompressFormat.JPEG)
-                options.setCompressionQuality(90)
-                options.setShowCropGrid(true)
-                options.setFreeStyleCropEnabled(true)
-                UCrop.of(uri, cacheUri)
-                        .withAspectRatio(1f, 1f)
-                        .withMaxResultSize(300, 300)
-                        .withOptions(options)
-                        .start(activity)
+                if(!uri.toString().endsWith("gif")){
+                    //图片裁剪
+                    val cacheUri = Uri.fromFile(File(activity.cacheDir, "crop.jpg"))
+                    val options = UCrop.Options()
+                    options.setStatusBarColor(Color.parseColor("#1dcbdb"))
+                    options.setToolbarColor(Color.parseColor("#1dcbdb"))
+                    options.setCompressionFormat(Bitmap.CompressFormat.JPEG)
+                    options.setCompressionQuality(90)
+                    options.setShowCropGrid(true)
+                    options.setFreeStyleCropEnabled(true)
+                    UCrop.of(uri, cacheUri)
+                            .withAspectRatio(1f, 1f)
+                            .withMaxResultSize(300, 300)
+                            .withOptions(options)
+                            .start(activity)
+
+                }else{
+                    //直接上传gif图片
+
+                }
+
             }
         } else if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
             if (data != null) {

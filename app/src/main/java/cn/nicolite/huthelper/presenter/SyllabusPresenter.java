@@ -87,7 +87,7 @@ public class SyllabusPresenter extends BasePresenter<ISyllabusView, SyllabusActi
                                 lessonList.add(lesson);
 
                             }
-                        }else {
+                        }else if (syllabusResult.getCode() == 404){
                              if (getView() != null){
                                  getView().showMessage(syllabusResult.getMsg()+",错误码："+syllabusResult.getCode());
                              }
@@ -142,7 +142,7 @@ public class SyllabusPresenter extends BasePresenter<ISyllabusView, SyllabusActi
                             getView().closeLoading();
 
                             if (ListUtils.isEmpty(lessonList)) {
-                                getView().showMessage("未找到你的课表！");
+                                getView().showMessage("未找到你的课表！请去个人信息界面选择班级");
                             }
 
                             //将用户自己添加的课程添加进去
@@ -151,7 +151,6 @@ public class SyllabusPresenter extends BasePresenter<ISyllabusView, SyllabusActi
                                     .where(LessonDao.Properties.UserId.eq(userId), LessonDao.Properties.AddByUser.eq(true))
                                     .list();
                             lessonList.addAll(list);
-
                             getView().showSyllabus(lessonList);
 
                         }
@@ -210,7 +209,6 @@ public class SyllabusPresenter extends BasePresenter<ISyllabusView, SyllabusActi
                         if (syllabusResult.getCode() == 200) {
                             List<SyllabusResult.DataBean> list = syllabusResult.getData();
                             for (SyllabusResult.DataBean dataBean : list) {
-
                                 Lesson lesson = new Lesson();
                                 lesson.setName(dataBean.getName());
                                 lesson.setRoom(dataBean.getRoom());
@@ -231,6 +229,10 @@ public class SyllabusPresenter extends BasePresenter<ISyllabusView, SyllabusActi
                                 lesson.setZs(stringBuilder.toString());
                                 lessonList.add(lesson);
 
+                            }
+                        }else if (syllabusResult.getCode() == 404){
+                            if (getView()!=null){
+                                getView().showMessage(syllabusResult.getMsg());
                             }
                         }
 
@@ -290,7 +292,7 @@ public class SyllabusPresenter extends BasePresenter<ISyllabusView, SyllabusActi
                             getView().closeLoading();
 
                             if (ListUtils.isEmpty(lessonList)) {
-                                getView().showMessage("未找到你的课表！");
+                                getView().showMessage("未找到你的课表！请去个人信息界面选择班级");
                             }
 
                             //将用户自己添加的课程添加进去
@@ -311,7 +313,6 @@ public class SyllabusPresenter extends BasePresenter<ISyllabusView, SyllabusActi
                         if (getView() != null) {
                             getView().closeLoading();
                             getView().showMessage(ExceptionEngine.handleException(e).getMsg());
-                            Log.i("tag","错误");
                         }
                     }
 

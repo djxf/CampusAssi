@@ -8,6 +8,7 @@ package cn.nicolite.huthelper.model.bean;
 public class UploadImages {
 
     /**
+     * 成功返回数据
      * code : 200
      * data : /uploads/moments/201710/1508420558.956143028_thumb.jpg
      * data_original : /uploads/moments/201710/1508420558.956143028.jpeg
@@ -16,6 +17,15 @@ public class UploadImages {
     private int code;
     private String data;
     private String data_original;
+    private String msg;
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 
     public int getCode() {
         return code;

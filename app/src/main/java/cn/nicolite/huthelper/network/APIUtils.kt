@@ -52,4 +52,6 @@ object APIUtils {
     fun getLoginAPI2() : LoginAPI2 = retrofit.create(LoginAPI2::class.java)
 
     fun getProfessAPI() : ProfessAPI = retrofit.create(ProfessAPI::class.java)
+
+    fun getSchoolAPI() : SchoolAPI = retrofit.create(SchoolAPI::class.java)
 }

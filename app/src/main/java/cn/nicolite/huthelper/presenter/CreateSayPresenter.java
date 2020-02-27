@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 import cn.nicolite.huthelper.base.BasePresenter;
 import cn.nicolite.huthelper.model.bean.HttpResult;
+import cn.nicolite.huthelper.model.bean.SlidePic;
 import cn.nicolite.huthelper.model.bean.UploadImages;
 import cn.nicolite.huthelper.network.APIUtils;
 import cn.nicolite.huthelper.network.exception.ExceptionEngine;
@@ -39,6 +40,7 @@ import cn.nicolite.huthelper.view.iview.ICreateSayView;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -148,7 +150,8 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
                             } else {
                                 stringBuilder.delete(0, stringBuilder.length());
                                 uploadCount.set(0);
-                                getView().uploadFailure("上传图片失败！");
+                                getView().uploadFailure("上传图片失败！"+uploadImages.getMsg());
+                                getView().closeLoading();
                             }
                         }
                     }
@@ -160,6 +163,7 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
                             uploadCount.set(0);
                             getView().uploadFailure("发布失败！");
                             getView().showMessage(ExceptionEngine.handleException(e).getMsg());
+                            getView().closeLoading();
                         }
                     }
 
@@ -240,11 +244,11 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
 
     }
 
-    public void uploadSayInfo(String content, String hidden) {
+    public void uploadSayInfo(String content, String hidden,String type) {
 
         APIUtils.INSTANCE
                 .getSayAPI()
-                .createSay(configure.getStudentKH(), configure.getAppRememberCode(), content, hidden)
+                .createSay(configure.getStudentKH(), configure.getAppRememberCode(), content, hidden,type)
                 .compose(getActivity().<HttpResult<String>>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -297,6 +301,53 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
         String type = options.outMimeType;
        return type;
     }
+
+    /**
+     *
+     * 展示选择标签的弹窗
+     */
+    public void selectLableView(){
+        APIUtils.INSTANCE
+                .getSchoolAPI()
+                .getVersion(configure.getStudentKH(),configure.getAppRememberCode())
+                .compose(getActivity().<SlidePic>bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<SlidePic>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(SlidePic slidePic) {
+                        if (slidePic.getCode().equals("200")){
+                            if (getView()!= null){
+                                getView().showSelectLableView(slidePic.getData().getMoment_types());
+                            }
+                        }else {
+                            if (getView()!=null){
+                                getView().showMessage("网络错误! 错误码"+slidePic.getCode());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (getView()!=null){
+                            getView().showMessage(e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
+    }
+
 
     /**
      * 将文件转换成二进制流 过于耗时 应该放在子线程中操作

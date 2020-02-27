@@ -18,7 +18,7 @@ import cn.nicolite.huthelper.view.iview.IFeedBackView;
 
 /**
  * 反馈界面
- * Created by nicolite on 17-10-24.
+ * Created by djxf on 2020年1月19日.
  */
 
 public class FeedBackActivity extends BaseActivity<IBaseView, BaseActivity> implements IFeedBackView {
@@ -34,8 +34,13 @@ public class FeedBackActivity extends BaseActivity<IBaseView, BaseActivity> impl
     LinearLayout rootView;
     @BindView(R.id.ll_feedbk)
     LinearLayout llFeedbk;
+    @BindView(R.id.tv_msg)
+    TextView tv_msg;
+    @BindView(R.id.tv_report)
+    TextView tv_report;
     private FeedBackPresenter feedBackPresenter;
-
+    private String title = "反馈";
+    private String content;
     @Override
     protected void initConfig(Bundle savedInstanceState) {
         setImmersiveStatusBar(true);
@@ -45,7 +50,15 @@ public class FeedBackActivity extends BaseActivity<IBaseView, BaseActivity> impl
 
     @Override
     protected void initBundleData(Bundle bundle) {
-
+        if (bundle!=null){
+            title = bundle.getString("title");
+            tv_report.setText(title);
+            content = bundle.getString("content");
+            etFeedbkContent.setText(content);
+            tv_msg.setVisibility(View.INVISIBLE);
+            etFeedbkTel.setVisibility(View.INVISIBLE);
+            etFeedbkContent.setSelection(content.length());
+        }
     }
 
     @Override
@@ -55,7 +68,7 @@ public class FeedBackActivity extends BaseActivity<IBaseView, BaseActivity> impl
 
     @Override
     protected void doBusiness() {
-        toolbarTitle.setText("反馈");
+        toolbarTitle.setText(title);
         feedBackPresenter = new FeedBackPresenter(this, this);
     }
 

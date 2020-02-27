@@ -20,4 +20,13 @@ public interface SchoolAPI {
      */
     @GET("api/v3/get/version/{studentKH}/{remember_code_app}/1")
     Call<SlidePic> slideShow(@Path("studentKH") String studentKH, @Path("remember_code_app") String rememberCodeApp);
+
+    /**
+     * @param studentKH          学号
+     * @param rememberCodeApp   认证token
+     * @return
+     */
+    @GET("api/v3/get/version/{studentKH}/{remember_code_app}/1")
+    Observable<SlidePic> getVersion(@Path("studentKH") String studentKH, @Path("remember_code_app") String rememberCodeApp);
+
 }

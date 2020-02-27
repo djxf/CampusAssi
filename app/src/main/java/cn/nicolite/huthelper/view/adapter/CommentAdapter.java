@@ -24,6 +24,9 @@ import cn.nicolite.huthelper.R;
 import cn.nicolite.huthelper.model.bean.Say;
 import cn.nicolite.huthelper.presenter.SayPresenter;
 import cn.nicolite.huthelper.utils.ListUtils;
+import cn.nicolite.huthelper.utils.TextCopyUtil.OnSelectListener;
+import cn.nicolite.huthelper.utils.TextCopyUtil.SelectableTextHelper;
+import cn.nicolite.huthelper.utils.ToastUtils;
 
 /**
  * Created by nicolite on 17-11-14.
@@ -118,8 +121,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }
         holder.text.setText(richContent);
         holder.text.setMovementMethod(LinkMovementMethod.getInstance());
-
-
     }
 
     @Override

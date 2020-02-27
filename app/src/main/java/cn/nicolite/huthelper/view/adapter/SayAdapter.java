@@ -1,5 +1,6 @@
 package cn.nicolite.huthelper.view.adapter;
 
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -33,6 +34,8 @@ import cn.nicolite.huthelper.model.bean.SayLikedCache;
 import cn.nicolite.huthelper.utils.AnimationTools;
 import cn.nicolite.huthelper.utils.ListUtils;
 import cn.nicolite.huthelper.utils.LogUtils;
+import cn.nicolite.huthelper.utils.TextCopyUtil.OnSelectListener;
+import cn.nicolite.huthelper.utils.TextCopyUtil.SelectableTextHelper;
 import cn.nicolite.huthelper.utils.ToastUtils;
 import cn.nicolite.huthelper.view.customView.NinePictureLayout;
 import cn.nicolite.huthelper.view.customView.NoScrollLinearLayoutManager;
@@ -51,13 +54,13 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
     private OnItemClickListener onItemClickListener;
     private String userId;
     private static boolean isFirstClick = true;
+    private SelectableTextHelper mSelectableTextHelper;
 
     public SayAdapter(Context context, List<Say> sayList,String searchtext) {
         this.context = context;
         this.sayList = sayList;
         userId = DaoUtils.getLoginUser();
         this.searchtext = searchtext;
-
     }
 
     @NonNull
@@ -89,6 +92,14 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
         holder.tvItemSayTime.setText(say.getCreated_on());
         holder.tvItemSayXy.setText(say.getDep_name());
         holder.tvSayItemLikenum.setText(say.getLikes());
+        if (TextUtils.isEmpty(say.getType())){
+            holder.tv_sayType.setVisibility(View.GONE);
+        }else {
+            holder.tv_sayType.setVisibility(View.VISIBLE);
+            holder.tv_sayType.setText("#"+say.getType());
+        }
+
+
 
         if (say.getContent().contains(searchtext) && !searchtext.equals("") && searchtext!=null){
             holder.sayContentMore.setVisibility(View.INVISIBLE);
@@ -182,6 +193,7 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
             holder.tvSayItemCommitnum.setText(String.valueOf(comments.size()));
         }
 
+
         holder.ivItemSayAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -209,6 +221,14 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
                 }
             }
         });
+
+        holder.image_arrow_down.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onArrowDownClick(holder.image_arrow_down,say.getId(),position);
+            }
+        });
+
 
         holder.rvItemSayimg.setOnClickImageListener(new PictureLayout.OnClickImageListener() {
             @Override
@@ -318,7 +338,10 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
         RecyclerView rvSayComments;
         @BindView(R.id.tv_saycontent_more)
         TextView sayContentMore;
-
+        @BindView(R.id.image_arrow_down)
+        ImageView image_arrow_down;
+        @BindView(R.id.tv_item_say_type)
+        TextView tv_sayType;
         public SayViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -350,11 +373,12 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
 
         void onCommentDeleteClick(int sayPosition, String commentId, int commentPosition);
 
+        //把点击的实例对象和说说id传出去
+       void onArrowDownClick(ImageView imageView,String sayId,final int position);
 
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
-
 }

@@ -30,7 +30,8 @@ public interface SayAPI {
     @FormUrlEncoded
     @POST("/api/v3/Statement/create/{xuehao}/{remember_code_app}")
     Observable<HttpResult<String>> createSay(@Path("xuehao") String xuehao, @Path("remember_code_app") String rememberCodeApp,
-                                             @Field("content") String content, @Field("hidden") String hidden);
+                                             @Field("content") String content, @Field("hidden") String hidden,
+                                             @Field("type") String type);
 
 
     /**
@@ -63,8 +64,9 @@ public interface SayAPI {
      * @param page 分页
      * @return
      */
-    @GET("/api/v3/Statement/get_statement/{page}")
-    Observable<HttpPageResult<List<Say>>> getSayList(@Path("page") int page);
+    @GET("/api/v3/statement/statement/{studentkh}/{page}")
+    Observable<HttpPageResult<List<Say>>> getSayList(@Path("studentkh")String studentkh,
+                                                     @Path("page") int page);
 
 
     /**

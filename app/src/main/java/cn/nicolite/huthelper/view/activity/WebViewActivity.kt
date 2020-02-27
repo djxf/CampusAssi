@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -68,6 +69,8 @@ class WebViewActivity : BaseActivity() {
     }
 
     override fun initConfig(savedInstanceState: Bundle?) {
+        //禁止截屏
+        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         setImmersiveStatusBar()
         setDeepColorStatusBar()
         setSlideExit()
@@ -81,7 +84,7 @@ class WebViewActivity : BaseActivity() {
             title = bundle.getString("title", "")
             if (type == -1 || TextUtils.isEmpty(url) || TextUtils.isEmpty(title)) {
                 ToastUtils.showToastShort("获取数据失败！")
-                LogUtils.d("test",""+type+url+title)
+
                 finish()
             }
         }
@@ -377,7 +380,6 @@ class WebViewActivity : BaseActivity() {
     private fun loadContent(url: String) {
         Observable.create(ObservableOnSubscribe<String> { e ->
             val document = Jsoup.connect(url)
-                    .header("Access-Control-Allow-Origin","*")//允许访问任何url
                     .userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)Chrome/50.0.2661.102 Safari/537.36")
                     .get()
             val head = document.head()
