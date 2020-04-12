@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,37 +12,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <include layout="@layout/toolbar_search_menu" />
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab"
             android:layout_width="match_parent"
-            android:layout_height="35dp">
-            <Button
-                android:id="@+id/bt_best_fresh"
-                android:layout_width="0dp"
-                android:text="最新"
-                android:textSize="16dp"
-                android:background="#191dcbdb"
-                android:textColor="@color/themeColor"
-                android:layout_weight="1"
-                android:layout_height="wrap_content" />
-            <Button
-                android:id="@+id/bt_best_hot"
-                android:layout_width="0dp"
-                android:text="最热"
-                android:textSize="16dp"
-                android:background="#191dcbdb"
-                android:textColor="@color/light_grey"
-                android:layout_weight="1"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:background="#191dcbdb"
+            app:tabBackground="?attr/selectableItemBackground"
+            app:tabIndicatorHeight="0dp"
+            app:tabSelectedTextColor="#1dcbdb"
+            app:tabTextColor="#808080" />
 
-        <FrameLayout
-            android:id="@+id/fragment_content"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/bg_grey" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </FrameLayout>

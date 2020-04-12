@@ -38,8 +38,6 @@ class MApplication : Application() {
         Beta.canShowUpgradeActs.add(MainActivity::class.java)
         Bugly.init(this, Constants.BUGLY_APPID, false)
         Bugly.setIsDevelopmentDevice(this, false)
-
-
     }
 
     override fun attachBaseContext(base: Context?) {

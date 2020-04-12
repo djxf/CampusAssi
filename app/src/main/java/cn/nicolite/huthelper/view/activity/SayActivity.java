@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,6 +36,8 @@ import cn.nicolite.huthelper.utils.DensityUtils;
 import cn.nicolite.huthelper.utils.ListUtils;
 import cn.nicolite.huthelper.utils.ScreenUtils;
 import cn.nicolite.huthelper.utils.ToastUtils;
+import cn.nicolite.huthelper.view.adapter.TabAdapter;
+import cn.nicolite.huthelper.view.fragment.MarketFragment;
 import cn.nicolite.huthelper.view.fragment.SayFragment;
 
 /**
@@ -43,21 +49,23 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
     TextView toolbarTitle;
     @BindView(R.id.rootView)
     FrameLayout rootView;
+    @BindView(R.id.tab)
+    TabLayout tab;
     @BindView(R.id.toolbar_menu)
     ImageView toolBarMenu;
-    @BindView(R.id.fragment_content)
-    FrameLayout fragmentContent;
     private SayFragment fragment;
     FragmentTransaction transaction;
-    @BindView(R.id.bt_best_fresh)
-    Button buttonre;
-    @BindView(R.id.bt_best_hot)
-    Button buttonhot;
+    @BindView(R.id.viewpager)
+    ViewPager viewpager;
+    List<String> titleList = new ArrayList<>();
+    private SayFragment followFragment;
+    private SayFragment allFragment;
+    private SayFragment hotFragment;
+
 
     @Override
     protected void initConfig(Bundle savedInstanceState) {
-        //禁止截屏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+
         setImmersiveStatusBar(true);
         setDeepColorStatusBar(true);
         setSlideExit(true);
@@ -77,15 +85,20 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
     protected void doBusiness() {
 
         toolbarTitle.setText("段子");
-        transaction = getSupportFragmentManager().beginTransaction();
-        fragment = SayFragment.newInstance(SayFragment.ALLSAY, null);
-        //transaction.replace(id,fragment):先检查队列中是否已经存在，存在就会崩溃，不存在就会进入队列并把其他fragment清出队列，最后显示该fragment到指定布局中。
-        //生命周期的调用：同add(id, fragment)。
-        transaction.replace(R.id.fragment_content, fragment);
-        transaction.commit();
+        viewpager.setAdapter(new TabAdapter(getSupportFragmentManager(), getTitleList(), getFragmentList()));
+        tab.setupWithViewPager(viewpager);
+        viewpager.setOffscreenPageLimit(2);
+
     }
 
-    @OnClick({R.id.toolbar_back, R.id.toolbar_menu,R.id.bt_best_hot,R.id.bt_best_fresh,R.id.toolbar_search})
+    private List<String> getTitleList() {
+        titleList.add("关注");
+        titleList.add("最热");
+        titleList.add("最新");
+        return titleList;
+    }
+
+    @OnClick({R.id.toolbar_back, R.id.toolbar_menu,R.id.toolbar_search})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.toolbar_back:
@@ -93,26 +106,6 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
                 break;
             case R.id.toolbar_menu:
                 showMenuWindow(toolBarMenu);
-                break;
-            case R.id.bt_best_fresh:
-                buttonre.setTextColor(Color.rgb(0x1d,0xcb,0xdb));
-                buttonhot.setTextColor(Color.BLACK);
-                toolbarTitle.setText("段子");
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                fragment = SayFragment.newInstance(SayFragment.ALLSAY,null);
-                transaction.replace(R.id.fragment_content,fragment);
-                transaction.commit();
-
-                break;
-            case R.id.bt_best_hot:
-                buttonre.setTextColor(Color.BLACK);
-                buttonhot.setTextColor(Color.rgb(0x1d,0xcb,0xdb));
-                toolbarTitle.setText("热门段子");
-                FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
-                fragment = SayFragment.newInstance(SayFragment.HOTSAY,null);
-                transaction2.replace(R.id.fragment_content,fragment,null);
-                transaction2.commit();
-
                 break;
             case R.id.toolbar_search:
                 //搜索按钮 传值600
@@ -159,8 +152,6 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
             tvTalk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    buttonhot.setVisibility(View.GONE);
-                    buttonre.setVisibility(View.GONE);
                     menuListWindow.dismiss();
                     toolbarTitle.setText("我的互动");
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -200,7 +191,6 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
                         ToastUtils.showToastLong("当前登录用户为空 请重新登录！");
                     }
 
-
                 }
             });
             menuListWindow = new PopupWindow(popupWindowLayout, DensityUtils.dp2px(SayActivity.this, 170),
@@ -222,6 +212,28 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
         menuListWindow.setBackgroundDrawable(new BitmapDrawable());
         menuListWindow.showAsDropDown(parent, -DensityUtils.dp2px(SayActivity.this, 115), 20);
     }
+
+    private List<Fragment> getFragmentList() {
+        List<Fragment> fragmentList = new ArrayList<>();
+
+        if (followFragment == null) {
+            followFragment = SayFragment.newInstance(SayFragment.FOLLOW, null);
+        }
+        if (hotFragment == null) {
+            hotFragment = SayFragment.newInstance(SayFragment.HOTSAY, null);
+        }
+        if (allFragment == null) {
+            allFragment = SayFragment.newInstance(SayFragment.ALLSAY, null);
+        }
+
+        fragmentList.add(followFragment);
+        fragmentList.add(hotFragment);
+        fragmentList.add(allFragment);
+        return fragmentList;
+    }
+
+
+
 
 
     @Override

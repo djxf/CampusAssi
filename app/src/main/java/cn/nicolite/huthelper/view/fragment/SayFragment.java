@@ -89,6 +89,7 @@ public class SayFragment extends BaseFragment implements ISayView {
     public static final int HOTSAY = 2;//热门说说
     public static final int MYTALK = 3;//我的互动
     public static final int SEARCHSAY = 4; //搜索说说
+    public static final int FOLLOW = 5; //关注说说
     private SayPresenter sayPresenter;
     private boolean isNoMore = false;
     private int currentPage = 1;
@@ -116,13 +117,15 @@ public class SayFragment extends BaseFragment implements ISayView {
     protected void initArguments(Bundle arguments) {
         if (arguments != null) {
             type = arguments.getInt("type", ALLSAY);
-            if (type == MYSAY) {
+            if (type == MYSAY ) {
                 searchText = arguments.getString("searchText", "");
             } else if (type == HOTSAY) {
                 searchText = arguments.getString("searchText", "");
             } else if (type == MYTALK) {
                 searchText = arguments.getString("searchText", "");
             }else if (type == SEARCHSAY){
+                searchText = arguments.getString("searchText","");
+            }else  if (type == FOLLOW){
                 searchText = arguments.getString("searchText","");
             }
         }
@@ -243,6 +246,10 @@ public class SayFragment extends BaseFragment implements ISayView {
                         //搜索说说
                         sayPresenter.loadSearchSay(1,false,searchText);
                         break;
+                    case SayFragment.FOLLOW:
+                        //关注说说
+                        sayPresenter.loadFollowSay(1,false);
+                        break;
                 }
             }
         });
@@ -267,6 +274,9 @@ public class SayFragment extends BaseFragment implements ISayView {
                         case SayFragment.SEARCHSAY:
                             sayPresenter.loadSearchSay(++currentPage,false,searchText);
                             break;
+                        case SayFragment.FOLLOW:
+                            sayPresenter.loadFollowSay(++currentPage,true);
+                            break;
                     }
                 }
             }
@@ -285,6 +295,10 @@ public class SayFragment extends BaseFragment implements ISayView {
                             break;
                         case SayFragment.SEARCHSAY:
                             sayPresenter.loadSearchSay(currentPage,true,searchText);
+                            break;
+                        case SayFragment.FOLLOW:
+                            sayPresenter.loadFollowSay(currentPage,true);
+                            break;
                     }
                 }
             }
@@ -340,6 +354,14 @@ public class SayFragment extends BaseFragment implements ISayView {
 
     @Override
     public void showSearchSayList(List<Say> list) {
+        sayList.clear();
+        sayList.addAll(list);
+        lRecyclerView.refreshComplete(list.size());
+        lRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showFollowSayList(List<Say> list) {
         sayList.clear();
         sayList.addAll(list);
         lRecyclerView.refreshComplete(list.size());
@@ -408,6 +430,8 @@ public class SayFragment extends BaseFragment implements ISayView {
             TextView tv_dislike = saySetPopupWindow.findViewById(R.id.tv_dislike_say);
             TextView tv_hide_user_say = saySetPopupWindow.findViewById(R.id.tv_hide_user_say);
             TextView tv_report = saySetPopupWindow.findViewById(R.id.tv_report);
+            TextView tv_follow = saySetPopupWindow.findViewById(R.id.tv_follow);
+            TextView tv_unfollow = saySetPopupWindow.findViewById(R.id.tv_unfollow);
             //不喜欢该说说
             tv_dislike.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -421,7 +445,6 @@ public class SayFragment extends BaseFragment implements ISayView {
                 @Override
                 public void onClick(View v) {
                     saySetWindow.dismiss();
-
                 }
             });
             //举报
@@ -433,6 +456,20 @@ public class SayFragment extends BaseFragment implements ISayView {
                     intent.putExtra("title","举报");
                     intent.putExtra("content","说说id:"+sayId+"\n"+"说说内容:"+sayList.get(position).getContent());
                     startActivity(intent);
+                }
+            });
+            tv_follow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sayPresenter.follow(sayList.get(position).getUser_id());
+                    saySetWindow.dismiss();
+                }
+            });
+            tv_unfollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sayPresenter.follow(sayList.get(position).getUser_id());
+                    saySetWindow.dismiss();
                 }
             });
 

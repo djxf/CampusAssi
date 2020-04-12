@@ -168,4 +168,31 @@ public interface SayAPI {
     Observable<HttpPageResult<String>> reportSay(@Path("studentKH")String studentKH,
                                                  @Path("remember_code_app")String code,
                                                  @Field("content")String content);
+
+    /**
+     * 关注说说
+     * @param studentKH
+     * @param code
+     * @param page
+     * @return
+     */
+    @GET("/api/v3/statement/follows/{studentKH}/{remember_code_app}/{page}")
+    Observable<HttpPageResult<List<Say>>> getFollowSays(@Path("studentKH")String studentKH,
+                                                 @Path("remember_code_app")String code,
+                                                 @Path("page") int page);
+
+    /**
+     * 关注和取消关注
+     * @param studentKH
+     * @param code
+     * @param follow_userid
+     * @return
+     */
+    @GET("/api/v3/statement/follow/{studentKH}/{remember_code_app}/{follow_userid}")
+    Observable<HttpResult<String>> followSays(@Path("studentKH")String studentKH,
+                                                        @Path("remember_code_app")String code,
+                                                        @Path("follow_userid") String follow_userid);
+
+
+
 }

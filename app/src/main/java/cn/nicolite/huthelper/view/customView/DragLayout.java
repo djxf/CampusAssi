@@ -223,7 +223,7 @@ public class DragLayout extends FrameLayout {
         }
     }
 
-    private void animateView(float percent) {
+    private void animateView(float percent){
         float f1 = 1 - percent * 0.3f;
         ViewHelper.setScaleX(vg_main, f1);   //主布局逐渐变大
         ViewHelper.setScaleY(vg_main, f1);

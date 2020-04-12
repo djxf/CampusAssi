@@ -156,7 +156,7 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
 
     private final MyHandler mHandler = new MyHandler(this);
 
-    private  class MyHandler extends Handler {
+    private class MyHandler extends Handler {
         private final WeakReference<MainActivity> mActivity;
         public MyHandler(MainActivity activity) {
             this.mActivity = new WeakReference<MainActivity>(activity);
@@ -204,6 +204,8 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
                 SharedPreferences.Editor editor = getSharedPreferences(getConfigureList().get(0).getUserId()+"im_count",MODE_PRIVATE).edit();
                 editor.putInt("im_count",slidePic.getData().getIm_msg_count());
                 editor.apply();
+                editor.commit();
+
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -420,7 +422,6 @@ public class MainActivity extends BaseActivity<IBaseView, BaseActivity> implemen
         intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.MainBroadcast);
         localBroadcastManager.registerReceiver(mainReceiver, intentFilter);
-
     }
 
     //主界面监听器

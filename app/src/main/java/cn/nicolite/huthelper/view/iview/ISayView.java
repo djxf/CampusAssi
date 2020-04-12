@@ -19,6 +19,8 @@ public interface ISayView extends IBaseView {
 
     void showSearchSayList(List<Say> list);//搜索说说
 
+    void showFollowSayList(List<Say> list);//关注说说
+
     void loadMore(List<Say> list);//加载更多
 
     void noMoreData();//没有更多数据

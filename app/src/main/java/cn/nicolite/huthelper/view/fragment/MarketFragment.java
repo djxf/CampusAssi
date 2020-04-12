@@ -278,5 +278,4 @@ public class MarketFragment extends BaseFragment implements IMarketView {
         lRecyclerViewAdapter.notifyItemChanged(position);
     }
 
-
 }

@@ -62,7 +62,6 @@ public abstract class PictureLayout extends ViewGroup {
             notifyDataSetChanged();
             isFirst = false;
         }
-
     }
 
     public void setSpacing(float space) {

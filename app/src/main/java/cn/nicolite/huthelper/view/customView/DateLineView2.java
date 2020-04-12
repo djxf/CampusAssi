@@ -49,11 +49,7 @@ public class DateLineView2 extends View {
         textPaint.setColor(Color.BLACK);
         circlePaint.setColor(Color.BLACK);
 
-
-
-
         //虚线
-
         linePaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         linePaint.setStyle(Paint.Style.STROKE);
 

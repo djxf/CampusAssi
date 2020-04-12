@@ -62,6 +62,7 @@ public class RetrofitUtils {
                 .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
                 .addInterceptor(logging)
                 .build();
+
     }
 
     /**

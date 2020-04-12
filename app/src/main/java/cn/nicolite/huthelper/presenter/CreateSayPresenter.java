@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
+
 
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -38,6 +38,7 @@ import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.view.activity.CreateSayActivity;
 import cn.nicolite.huthelper.view.iview.ICreateSayView;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
@@ -105,9 +106,7 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/gif"), bytes);
         MultipartBody.Part file = MultipartBody.Part.createFormData("file", "01."+type, requestBody);
 
-//        if (getView() != null) {
-//            getView().uploadProgress("正在上传图片:"+uploadCount+"/"+count);
-//        }
+
 
         APIUtils.INSTANCE
                 .getUploadAPI()
@@ -288,19 +287,6 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
                 });
     }
 
-    /**
-     * 获取媒体类型
-     *
-     * @param path
-     * @return
-     */
-    public static String getMediaType(String path){
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-        String type = options.outMimeType;
-       return type;
-    }
 
     /**
      *
@@ -344,8 +330,6 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
 
                     }
                 });
-
-
     }
 
 
@@ -377,5 +361,47 @@ public class CreateSayPresenter extends BasePresenter<ICreateSayView, CreateSayA
         }
         LogUtils.d("TAG",threadName+":time:"+(System.currentTimeMillis()-time1)+"fileLength:"+fileLength);
             return buff;
+    }
+
+
+    /**
+     * 测试方法 不在正式环境中使用
+     *
+     */
+    public static void test(){
+           Observable<Object>  observable =  Observable.create(new ObservableOnSubscribe<Object>() {
+
+            @Override
+            public void subscribe(ObservableEmitter<Object> emitter){
+
+            }
+        });
+
+
+           //观察者
+            Observer<Object> observer = new Observer<Object>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(Object o) {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            };
+
+            observable.subscribe(observer);
+
     }
 }
