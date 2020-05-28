@@ -96,19 +96,6 @@ class AboutFragment : BaseFragment() {
             }
 
         })
-        contact.setOnClickListener {
-            try {
-                val uri = Uri.parse("mqqwpa://im/chat?chat_type=wpa&uin=2350156896")
-                val intent = Intent(Intent.ACTION_VIEW, uri)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            } catch (e: Exception) {
-                ToastUtils.showToastShort("请检查你的手机是否安装QQ")
-                e.printStackTrace()
-            }
-        }
-
-
     }
 
 }
