@@ -444,5 +444,4 @@ public abstract class BaseActivity<I extends IBaseView, A extends BaseActivity> 
     private void showToast(int duration, String format, Object... args) {
         Toast.makeText(context, String.format(format, args), duration).show();
     }
-
 }

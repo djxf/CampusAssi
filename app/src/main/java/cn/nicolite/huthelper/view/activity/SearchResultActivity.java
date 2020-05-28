@@ -86,16 +86,19 @@ public class SearchResultActivity extends BaseActivity<IBaseView, BaseActivity> 
                 } else {
                     toolbarTitle.setText(String.valueOf(extras + "的说说"));
                 }
-                break;
+                    break;
                 case SearchPresenter.TYPE_SEARCHSAY:
                     if (!searchText.equals("")){
                         toolbarTitle.setText("为你找到关于："+searchText+"的最优结果");
                     }
                     break;
+                    case SearchPresenter.TYPE_MY_TALKSAY:
+                        //我的互动说说
+                        toolbarTitle.setText("我的互动");
+                        break;
             default:
                 toolbarTitle.setText(searchText);
                 break;
-
         }
 
         if (TextUtils.isEmpty(searchText)) {
@@ -139,7 +142,10 @@ public class SearchResultActivity extends BaseActivity<IBaseView, BaseActivity> 
                 case SearchPresenter.TYPE_SEARCHSAY:
                     transaction.replace(R.id.fragment_content,SayFragment.newInstance(SayFragment.SEARCHSAY,searchText));
                     break;
-
+                case SearchPresenter.TYPE_MY_TALKSAY:
+                    //我的互动
+                    transaction.replace(R.id.fragment_content,SayFragment.newInstance(SayFragment.MYTALK,searchText));
+                    break;
             default:
                 ToastUtils.showToastShort("未知类型！");
         }

@@ -36,6 +36,7 @@ class MApplication : Application() {
         StatService.startStatService(this, Constants.MTA_APPKEY, StatConstants.VERSION)
         StatCrashReporter.getStatCrashReporter(this).javaCrashHandlerStatus = true
         Beta.canShowUpgradeActs.add(MainActivity::class.java)
+        //发布之前改为发布模式
         Bugly.init(this, Constants.BUGLY_APPID, false)
         Bugly.setIsDevelopmentDevice(this, false)
     }

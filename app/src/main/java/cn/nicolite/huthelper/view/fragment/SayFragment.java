@@ -444,6 +444,7 @@ public class SayFragment extends BaseFragment implements ISayView {
             tv_hide_user_say.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     saySetWindow.dismiss();
                 }
             });

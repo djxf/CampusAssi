@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -84,7 +86,7 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
     @Override
     protected void doBusiness() {
 
-        toolbarTitle.setText("段子");
+        toolbarTitle.setText("工大说说");
         viewpager.setAdapter(new TabAdapter(getSupportFragmentManager(), getTitleList(), getFragmentList()));
         tab.setupWithViewPager(viewpager);
         viewpager.setOffscreenPageLimit(2);
@@ -92,9 +94,9 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
     }
 
     private List<String> getTitleList() {
+        titleList.add("最新");
         titleList.add("关注");
         titleList.add("最热");
-        titleList.add("最新");
         return titleList;
     }
 
@@ -153,10 +155,10 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
                 @Override
                 public void onClick(View v) {
                     menuListWindow.dismiss();
-                    toolbarTitle.setText("我的互动");
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_content,SayFragment.newInstance(SayFragment.MYTALK,null));
-                    transaction.commit();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type",601);
+                    bundle.putString("searchText","我的互动");
+                    startActivity(SearchResultActivity.class,bundle);
                 }
             });
             tvHot.setOnClickListener(new View.OnClickListener() {
@@ -225,11 +227,12 @@ public class SayActivity extends BaseActivity<IBaseView, BaseActivity> {
         if (allFragment == null) {
             allFragment = SayFragment.newInstance(SayFragment.ALLSAY, null);
         }
-
+        fragmentList.add(allFragment);
         fragmentList.add(followFragment);
         fragmentList.add(hotFragment);
-        fragmentList.add(allFragment);
+
         return fragmentList;
+
     }
 
 

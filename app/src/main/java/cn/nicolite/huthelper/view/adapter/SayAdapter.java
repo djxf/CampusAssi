@@ -246,7 +246,17 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
         if (!ListUtils.isEmpty(comments)) {
             NoScrollLinearLayoutManager layout = new NoScrollLinearLayoutManager(context, OrientationHelper.VERTICAL, false);
             holder.rvSayComments.setLayoutManager(layout);
-            CommentAdapter commentAdapter = new CommentAdapter(context, say.getComments(), userId, position);
+            List<Say.CommentsBean> commentsBeanListLimit;
+            //是否过多评论标记
+            boolean isMoreComment = false;
+            //过多评论进行截取
+            if (say.getComments().size() >= 10){
+                commentsBeanListLimit = say.getComments().subList(0,10);
+                isMoreComment = true;
+            }else {
+                commentsBeanListLimit = say.getComments();
+            }
+            CommentAdapter commentAdapter = new CommentAdapter(context, commentsBeanListLimit, userId, position);
             holder.rvSayComments.setAdapter(commentAdapter);
             commentAdapter.setOnItemClickListener(new CommentAdapter.OnItemClickListener() {
                 @Override
@@ -270,7 +280,6 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
                     }
                 }
             });
-
 
 
 

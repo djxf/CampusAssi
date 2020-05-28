@@ -24,6 +24,7 @@ public class SearchPresenter extends BasePresenter<ISearchView, SearchActivity> 
     public static final int TYPE_MYLOSTANDFOUND = 4;
     public static final int TYPE_MYSAY = 586;
     public static final int TYPE_SEARCHSAY = 600;   //搜索说说
+    public static final int TYPE_MY_TALKSAY = 601;  //我的互动
     public SearchPresenter(ISearchView view, SearchActivity activity) {
         super(view, activity);
     }

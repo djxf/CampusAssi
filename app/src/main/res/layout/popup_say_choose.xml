@@ -69,4 +69,5 @@
         view:drawable_location="left"
         view:drawable_src="@drawable/menu_talk"
         view:drawable_width="25dp" />
+
 </LinearLayout>
