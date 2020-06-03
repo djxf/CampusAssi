@@ -285,7 +285,7 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                                 getView().showMessage("评论成功！");
                             }
                         } else {
-                            getView().showMessage("评论失败！");
+                           //
                         }
 
                     }
@@ -395,9 +395,8 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                                 }
                                 if (ListUtils.isEmpty(listHttpPageResult.getData())) {
                                     getView().showMessage("暂时没有相关内容！");
+                                    return;
                                 }
-
-
                                 getView().showSayList(listHttpPageResult.getData());
                             } else {
                                 getView().closeLoading();
@@ -606,10 +605,8 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                                 getView().showMessage("暂时没有相关内容！");
                             }
                             getView().showHotSayList(listHttpPageResult.getData());
-                        } else {
-                            getView().closeLoading();
-                            getView().showMessage("加载失败!");
-
+                        }else {
+                            //暂时空处理
                         }
                     }
 
@@ -671,9 +668,7 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                             }
                             getView().showTalkSayList(listHttpPageResult.getData());
                         } else {
-                            getView().closeLoading();
-                            getView().showMessage("加载失败!");
-
+                          //暂时空处理
                         }
                     }
 
@@ -733,10 +728,6 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                                 getView().showMessage("暂时没有相关内容！");
                             }
                             getView().showHotSayList(listHttpPageResult.getData());
-                        } else {
-                            getView().closeLoading();
-                            getView().showMessage("加载失败!");
-
                         }
                     }
 
@@ -803,9 +794,7 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                             }
                             getView().showSayList(listHttpPageResult.getData());
                         } else {
-                            getView().closeLoading();
-                            getView().showMessage("加载失败!");
-
+                            //暂时空处理
                         }
                     }
 
@@ -814,7 +803,6 @@ public class SayPresenter extends BasePresenter<ISayView, SayFragment> {
                         if (getView() != null) {
                             getView().closeLoading();
                             getView().showMessage("加载失败，" + ExceptionEngine.handleException(e).getMsg());
-
                         }
                     }
 
