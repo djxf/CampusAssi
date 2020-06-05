@@ -49,9 +49,6 @@ public class CourseWidget extends AppWidgetProvider {
 
     public static final String WEEK_NEXT_ACTION = "cn.nicolite.huthelper.action_weeknext";
 
-    // public static final String START_COURSEACTIVITY_ACTION = "cn.nicolite.huthelper.action_startcouActivity";
-
-    //public static final String START_MAINACTIVITY_ACTION="cn.nicolite.huthelper.action_startmainActivity";
 
     private static int currNum = 0;
 
@@ -59,6 +56,9 @@ public class CourseWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         String week = "";
+        if (intent == null){
+            return;
+        }
         switch (intent.getAction()) {
             case COURSE_UP_ACTION:
                 currNum -= 2;
@@ -166,7 +166,13 @@ public class CourseWidget extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.ll_widget_coursecontent2, pendingIntentmain);
 
             Collections.sort(todayLesson, new LessonComparator());
-            int num1 = Integer.parseInt(todayLesson.get(currNum).getDjj());
+            //有越界异常
+            int num1 = 0;
+            try {
+                num1 = Integer.parseInt(todayLesson.get(currNum).getDjj());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             String name1 = todayLesson.get(currNum).getName();
             String room1 = todayLesson.get(currNum).getRoom();
             if (currNum + 2 <= size) {
