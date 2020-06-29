@@ -38,6 +38,7 @@ public class NinePictureLayout extends PictureLayout {
             return false;
         }
 
+
         Glide
                 .with(context)
                 .load(Constants.PICTURE_URL + url)
