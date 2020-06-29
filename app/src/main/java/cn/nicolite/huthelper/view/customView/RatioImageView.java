@@ -76,5 +76,4 @@ public class RatioImageView extends AppCompatImageView {
 
         return super.onTouchEvent(event);
     }
-
 }

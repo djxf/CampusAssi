@@ -14,7 +14,7 @@ import java.util.TimerTask;
 import cn.nicolite.huthelper.R;
 
 /**
- * 根据图片数量分不同格式显示
+ * 自定义九宫格图片显示器
  * Created by 高沛 on 2016/12/21.
  */
 
@@ -215,7 +215,7 @@ public abstract class PictureLayout extends ViewGroup {
             @Override
             public void onClick(View v) {
                 if (onClickImageListener != null) {
-                    onClickImageListener.onClickImage(i, urlList);
+                    onClickImageListener.onClickImage(i, urlList,v);
                 }
             }
         });
@@ -251,15 +251,17 @@ public abstract class PictureLayout extends ViewGroup {
     }
 
     public interface OnClickImageListener {
-        void onClickImage(int position, List<String> urlList);
+        //这里把被点击的图片(view)传出去 以方便后面的操作
+        void onClickImage(int position, List<String> urlList,View view);
     }
 
-    //禁止滑动
+    //禁止垂直滑动
     @Override
     public boolean canScrollVertically(int direction) {
         return false;
     }
 
+    //禁止水平滑动
     @Override
     public boolean canScrollHorizontally(int direction) {
         return false;
