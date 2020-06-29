@@ -33,6 +33,11 @@ public class NinePictureLayout extends PictureLayout {
     @Override
     protected boolean displayOneImage(final RatioImageView imageView, String url, final int parentWidth) {
 
+        //主动对context为空进行取消加载
+        if (context == null){
+            return false;
+        }
+
         Glide
                 .with(context)
                 .load(Constants.PICTURE_URL + url)
@@ -81,6 +86,12 @@ public class NinePictureLayout extends PictureLayout {
 
     @Override
     protected void displayImage(RatioImageView imageView, String url) {
+
+        //主动对context为空进行取消加载
+        if (context == null){
+            return;
+        }
+
         Glide
                 .with(context)
                 .load(Constants.PICTURE_URL + url)
