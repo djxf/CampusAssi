@@ -368,10 +368,9 @@ public class DateUtils {
             Date begin = df.parse(newTerm);
             Date end = new Date();
             be = (end.getTime() - begin.getTime()) / (1000 * 60 * 60 * 24);
-        } catch (ParseException e) {
+        } catch (ParseException | IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
-
         return (int) (be / 7 + 1);
     }
 
