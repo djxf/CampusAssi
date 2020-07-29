@@ -232,6 +232,10 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
 
         holder.rvItemSayimg.setOnClickImageListener(new PictureLayout.OnClickImageListener() {
             @Override
+            public void onClickImage(int position, List<String> urlList, View view) {
+
+            }
+
             public void onClickImage(int position, List<String> urlList) {
                 final List<String> picsRaw2 = new ArrayList<>();
 
@@ -256,7 +260,7 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
             }else {
                 commentsBeanListLimit = say.getComments();
             }
-            CommentAdapter commentAdapter = new CommentAdapter(context, commentsBeanListLimit, userId, position);
+            CommentAdapter commentAdapter = new CommentAdapter(context, say.getComments(), userId, position);
             holder.rvSayComments.setAdapter(commentAdapter);
             commentAdapter.setOnItemClickListener(new CommentAdapter.OnItemClickListener() {
                 @Override
