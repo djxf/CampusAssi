@@ -405,7 +405,7 @@ public class MainPresenter extends BasePresenter<IMainView, MainActivity> {
     }
 
     public void startLoginService() {
-        LoginService.start(MApplication.application);
+        //登录检测服务取消
     }
 
 
