@@ -2,6 +2,7 @@ package cn.nicolite.huthelper.view.adapter;
 
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.OrientationHelper;
@@ -37,6 +38,7 @@ import cn.nicolite.huthelper.utils.LogUtils;
 import cn.nicolite.huthelper.utils.TextCopyUtil.OnSelectListener;
 import cn.nicolite.huthelper.utils.TextCopyUtil.SelectableTextHelper;
 import cn.nicolite.huthelper.utils.ToastUtils;
+import cn.nicolite.huthelper.view.activity.ShowImageActivity;
 import cn.nicolite.huthelper.view.customView.NinePictureLayout;
 import cn.nicolite.huthelper.view.customView.NoScrollLinearLayoutManager;
 import cn.nicolite.huthelper.view.customView.PictureLayout;
@@ -233,10 +235,6 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
         holder.rvItemSayimg.setOnClickImageListener(new PictureLayout.OnClickImageListener() {
             @Override
             public void onClickImage(int position, List<String> urlList, View view) {
-
-            }
-
-            public void onClickImage(int position, List<String> urlList) {
                 final List<String> picsRaw2 = new ArrayList<>();
 
                 //暂时返回略缩图片
@@ -245,6 +243,7 @@ public class SayAdapter extends RecyclerView.Adapter<SayAdapter.SayViewHolder> {
                 }
                 onItemClickListener.onImageClick(position, picsRaw2);
             }
+
         });
 
         if (!ListUtils.isEmpty(comments)) {
